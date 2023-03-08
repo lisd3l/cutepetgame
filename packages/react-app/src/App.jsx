@@ -1,6 +1,6 @@
 import Portis from "@portis/web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Alert, Button, Card, Col, Input, List, Menu, Row } from "antd";
+import { Alert, Button, Card, Col, Select, List, Menu, Row, InputNumber} from "antd";
 import "antd/dist/antd.css";
 import Authereum from "authereum";
 import {
@@ -512,6 +512,8 @@ function App() {
   const [transferToAddresses, setTransferToAddresses] = useState({});
   const [minting, setMinting] = useState(false);
   const [count, setCount] = useState(1);
+  const [selectedPetCount, setSelectedPetCount] = useState(0);
+  const [selectedPetValue, setSelectedPetValue] = useState("");
 
   // the json for the nfts
   const json = {
@@ -664,6 +666,27 @@ function App() {
     );
   };
 
+  const clearPetSelect = async () => {
+    setSelectedPetCount(1000);
+  }
+  const timeLeft = (new Date()).getTime();
+  const changePetSelect = async (value) => {
+    setSelectedPetValue(value);
+    if (value == "") {
+      // TODO 从合约取
+      setSelectedPetCount(1000);
+    } else if (value == "1") {
+       // TODO 从合约取
+       setSelectedPetCount(300);
+    } else if (value == "2") {
+      // TODO 从合约取
+      setSelectedPetCount(400);
+    } else if (value == "3") {
+      // TODO 从合约取
+      setSelectedPetCount(300);
+    }
+  };
+
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
@@ -678,53 +701,34 @@ function App() {
               }}
               to="/"
             >
-              YourCollectibles
+              Mint
             </Link>
           </Menu.Item>
-          <Menu.Item key="/transfers">
+          <Menu.Item key="/wallet">
             <Link
               onClick={() => {
-                setRoute("/transfers");
+                setRoute("/wallet");
               }}
-              to="/transfers"
+              to="/wallet"
             >
-              Transfers
+              Wallet
             </Link>
           </Menu.Item>
-          <Menu.Item key="/ipfsup">
+          <Menu.Item key="/quiz">
             <Link
               onClick={() => {
-                setRoute("/ipfsup");
+                setRoute("/quiz");
               }}
-              to="/ipfsup"
+              to="/quiz"
             >
-              IPFS Upload
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/ipfsdown">
-            <Link
-              onClick={() => {
-                setRoute("/ipfsdown");
-              }}
-              to="/ipfsdown"
-            >
-              IPFS Download
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/debugcontracts">
-            <Link
-              onClick={() => {
-                setRoute("/debugcontracts");
-              }}
-              to="/debugcontracts"
-            >
-              Debug Contracts
+              Quiz
             </Link>
           </Menu.Item>
         </Menu>
         <Switch>
           <Route exact path="/">
             <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <InputNumber min={0} max={10} defaultValue={0} />
               <Button
                 disabled={minting}
                 shape="round"
@@ -736,6 +740,10 @@ function App() {
                 MINT NFT
               </Button>
             </div>
+          </Route>
+
+          <Route path="/wallet">
+            
             <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <List
                 bordered
@@ -791,107 +799,112 @@ function App() {
             </div>
           </Route>
 
-          <Route path="/transfers">
-            <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-              <List
-                bordered
-                dataSource={transferEvents}
-                renderItem={item => {
-                  return (
-                    <List.Item key={item[0] + "_" + item[1] + "_" + item.blockNumber + "_" + item.args[2].toNumber()}>
-                      <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[2].toNumber()}</span>
-                      <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /> =&gt;
-                      <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
-                    </List.Item>
-                  );
-                }}
-              />
+          <Route path="/quiz">
+            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <div style={{ fontSize: 20, padding: 8, marginTop: 32, fontWeight: "bold" }}>
+                <div>Timeleft:{timeLeft}</div>
+              </div>
+              <Row align="middle">
+                <Col span={8}>
+                  <span style={{ fontSize: 20, marginRight: 8, fontWeight: "bold" }}>Cat Amount</span> 300
+                </Col>
+
+                <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
+                  <span style={{ fontSize: 20, marginRight: 8, fontWeight: "bold" }}>Dog Amount</span> 400
+                </Col>
+                <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
+                  <span style={{ fontSize: 20, marginRight: 8, fontWeight: "bold" }}>Mouse Amount</span> 300
+                </Col>
+              </Row>
+              <br/>
+              <Row align="middle">
+                <Col span={4}>
+                  <span>Convert Before</span>
+                </Col>
+                <Col span={16}>
+                  <Select
+                    allowClear
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder="Select a pet"
+                    optionFilterProp="children"
+                    onChange={changePetSelect}
+                    onClear={clearPetSelect}
+                    filterOption={(input, option) =>
+                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    options={[
+                      {
+                        value: '1',
+                        label: 'Cat',
+                      },
+                      {
+                        value: '2',
+                        label: 'Dog',
+                      },
+                      {
+                        value: '3',
+                        label: 'Mouse',
+                      },
+                    ]}
+                  />
+                </Col>
+                <Col span={4}>
+                   <span>{ selectedPetCount }</span>
+                </Col>
+              </Row>
+              <br/>
+              <Row align="middle">
+                <Col span={4}>
+                  <span>Convert</span>
+                </Col>
+                <Col span={20}>
+                  <InputNumber min={0} defaultValue={0} value={selectedPetCount} />
+                  {(selectedPetValue !== "" && selectedPetValue !== "1")?
+                  <Button
+                    disabled={minting}
+                    shape="round"
+                    size="large"
+                    onClick={() => {
+                      mintItem();
+                    }}
+                    type="primary"
+                  >
+                    Convert Cat
+                  </Button>
+                  : ""
+                  }
+                  {(selectedPetValue !== "" && selectedPetValue !== "2")?
+                  <Button
+                    disabled={minting}
+                    shape="round"
+                    size="large"
+                    onClick={() => {
+                      mintItem();
+                    }}
+                    type="primary"
+                  >
+                    Convert Dog
+                  </Button>
+                  : ""
+                  }
+                  {(selectedPetValue !== "" && selectedPetValue !== "3")?
+                  <Button
+                    disabled={minting}
+                    shape="round"
+                    size="large"
+                    onClick={() => {
+                      mintItem();
+                    }}
+                    type="primary"
+                  >
+                    Convert Mouse
+                  </Button>
+                  : ""
+                  }
+                </Col>
+              </Row>
             </div>
-          </Route>
-
-          <Route path="/ipfsup">
-            <div style={{ paddingTop: 32, width: 740, margin: "auto", textAlign: "left" }}>
-              <ReactJson
-                style={{ padding: 8 }}
-                src={yourJSON}
-                theme="pop"
-                enableClipboard={false}
-                onEdit={(edit, a) => {
-                  setYourJSON(edit.updated_src);
-                }}
-                onAdd={(add, a) => {
-                  setYourJSON(add.updated_src);
-                }}
-                onDelete={(del, a) => {
-                  setYourJSON(del.updated_src);
-                }}
-              />
-            </div>
-
-            <Button
-              style={{ margin: 8 }}
-              loading={sending}
-              size="large"
-              shape="round"
-              type="primary"
-              onClick={async () => {
-                console.log("UPLOADING...", yourJSON);
-                setSending(true);
-                setIpfsHash();
-                const result = await ipfs.add(JSON.stringify(yourJSON)); // addToIPFS(JSON.stringify(yourJSON))
-                if (result && result.path) {
-                  setIpfsHash(result.path);
-                }
-                setSending(false);
-                console.log("RESULT:", result);
-              }}
-            >
-              Upload to IPFS
-            </Button>
-
-            <div style={{ padding: 16, paddingBottom: 150 }}>{ipfsHash}</div>
-          </Route>
-          <Route path="/ipfsdown">
-            <div style={{ paddingTop: 32, width: 740, margin: "auto" }}>
-              <Input
-                value={ipfsDownHash}
-                placeHolder="IPFS hash (like QmadqNw8zkdrrwdtPFK1pLi8PPxmkQ4pDJXY8ozHtz6tZq)"
-                onChange={e => {
-                  setIpfsDownHash(e.target.value);
-                }}
-              />
-            </div>
-            <Button
-              style={{ margin: 8 }}
-              loading={sending}
-              size="large"
-              shape="round"
-              type="primary"
-              onClick={async () => {
-                console.log("DOWNLOADING...", ipfsDownHash);
-                setDownloading(true);
-                setIpfsContent();
-                const result = await getFromIPFS(ipfsDownHash); // addToIPFS(JSON.stringify(yourJSON))
-                if (result && result.toString) {
-                  setIpfsContent(result.toString());
-                }
-                setDownloading(false);
-              }}
-            >
-              Download from IPFS
-            </Button>
-
-            <pre style={{ padding: 16, width: 500, margin: "auto", paddingBottom: 150 }}>{ipfsContent}</pre>
-          </Route>
-          <Route path="/debugcontracts">
-            <Contract
-              name="YourCollectible"
-              signer={userSigner}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-              contractConfig={contractConfig}
-            />
           </Route>
         </Switch>
       </BrowserRouter>
