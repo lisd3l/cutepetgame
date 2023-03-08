@@ -29,3 +29,5 @@ yarn deploy
 📱 Open http://localhost:3000 to see the app
 
 ---
+
+goerli network gas is required
