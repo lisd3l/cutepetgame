@@ -22,7 +22,7 @@ import WalletLink from "walletlink";
 import Web3Modal from "web3modal";
 import "./App.css";
 import { Account, Address, AddressInput, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
-import { INFURA_ID, NETWORK, NETWORKS } from "./constants";
+import { INFURA_ID, NETWORK, NETWORKS, ALCHEMY_KEY } from "./constants";
 import { Transactor } from "./helpers";
 import { useContractConfig } from "./hooks";
 
@@ -44,25 +44,20 @@ const { ethers } = require("ethers");
 
 /*
     Welcome to 🏗 scaffold-eth !
-
     Code:
     https://github.com/scaffold-eth/scaffold-eth
-
     Support:
     https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA
     or DM @austingriffith on twitter or telegram
-
     You should get your own Infura.io ID and put it in `constants.js`
     (this is your connection to the main Ethereum network for ENS etc.)
-
-
     🌏 EXTERNAL CONTRACTS:
     You can also bring in contract artifacts in `constants.js`
     (and then use the `useExternalContractLoader()` hook!)
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -117,7 +112,7 @@ const poktMainnetProvider = navigator.onLine
     )
   : null;
 const mainnetInfura = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
+  ? new ethers.providers.StaticJsonRpcProvider(`https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`)
   : null;
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 
@@ -137,7 +132,7 @@ const walletLink = new WalletLink({
 });
 
 // WalletLink provider
-const walletLinkProvider = walletLink.makeWeb3Provider(`https://mainnet.infura.io/v3/${INFURA_ID}`, 1);
+const walletLinkProvider = walletLink.makeWeb3Provider(`https://mainnet.infura.io/v3/${ALCHEMY_KEY}`, 1);
 
 /* Web3 modal helps us "connect" external wallets: */
 const web3Modal = new Web3Modal({
@@ -151,7 +146,7 @@ const web3Modal = new Web3Modal({
         bridge: "https://polygon.bridge.walletconnect.org",
         infuraId: INFURA_ID,
         rpc: {
-          1: `https://mainnet.infura.io/v3/${INFURA_ID}`, // mainnet // For more WalletConnect providers: https://docs.walletconnect.org/quick-start/dapps/web3-provider#required
+          1: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`, // mainnet // For more WalletConnect providers: https://docs.walletconnect.org/quick-start/dapps/web3-provider#required
           42: `https://kovan.infura.io/v3/${INFURA_ID}`,
           100: "https://dai.poa.network", // xDai
         },
