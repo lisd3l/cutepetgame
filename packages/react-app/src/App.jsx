@@ -1,6 +1,6 @@
 import Portis from "@portis/web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Alert, Button, Card, Col, Select, List, Menu, Row, InputNumber} from "antd";
+import { Alert, Button, Card, Col, Select, List, Menu, Row, InputNumber } from "antd";
 import "antd/dist/antd.css";
 import Authereum from "authereum";
 import {
@@ -21,7 +21,7 @@ import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import WalletLink from "walletlink";
 import Web3Modal from "web3modal";
 import "./App.css";
-import { Account, Address, AddressInput, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
+import { Account, Address, AddressInput, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch, WalletView } from "./components";
 import { INFURA_ID, NETWORK, NETWORKS, ALCHEMY_KEY } from "./constants";
 import { Transactor } from "./helpers";
 import { useContractConfig } from "./hooks";
@@ -281,7 +281,7 @@ function App() {
   // 🧠 This effect will update yourCollectibles by polling when your balance changes
   //
   const yourBalance = balance && balance.toNumber && balance.toNumber();
-  const [yourCollectibles, setYourCollectibles] = useState();
+  const [yourCollectibles, setYourCollectibles] = useState([]);
 
   useEffect(() => {
     const updateYourCollectibles = async () => {
@@ -509,11 +509,8 @@ function App() {
   const [ipfsDownHash, setIpfsDownHash] = useState();
   const [downloading, setDownloading] = useState();
   const [ipfsContent, setIpfsContent] = useState();
-  const [transferToAddresses, setTransferToAddresses] = useState({});
   const [minting, setMinting] = useState(false);
   const [count, setCount] = useState(1);
-  const [selectedPetCount, setSelectedPetCount] = useState(0);
-  const [selectedPetValue, setSelectedPetValue] = useState("");
 
   // the json for the nfts
   const json = {
@@ -666,27 +663,6 @@ function App() {
     );
   };
 
-  const clearPetSelect = async () => {
-    setSelectedPetCount(1000);
-  }
-  const timeLeft = (new Date()).getTime();
-  const changePetSelect = async (value) => {
-    setSelectedPetValue(value);
-    if (value == "") {
-      // TODO 从合约取
-      setSelectedPetCount(1000);
-    } else if (value == "1") {
-       // TODO 从合约取
-       setSelectedPetCount(300);
-    } else if (value == "2") {
-      // TODO 从合约取
-      setSelectedPetCount(400);
-    } else if (value == "3") {
-      // TODO 从合约取
-      setSelectedPetCount(300);
-    }
-  };
-
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
@@ -714,16 +690,6 @@ function App() {
               Wallet
             </Link>
           </Menu.Item>
-          <Menu.Item key="/quiz">
-            <Link
-              onClick={() => {
-                setRoute("/quiz");
-              }}
-              to="/quiz"
-            >
-              Quiz
-            </Link>
-          </Menu.Item>
         </Menu>
         <Switch>
           <Route exact path="/">
@@ -743,168 +709,17 @@ function App() {
           </Route>
 
           <Route path="/wallet">
-            
-            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-              <List
-                bordered
-                dataSource={yourCollectibles}
-                renderItem={item => {
-                  const id = item.id.toNumber();
-                  return (
-                    <List.Item key={id + "_" + item.uri + "_" + item.owner}>
-                      <Card
-                        title={
-                          <div>
-                            <span style={{ fontSize: 16, marginRight: 8 }}>#{id}</span> {item.name}
-                          </div>
-                        }
-                      >
-                        <div>
-                          <img src={item.image} style={{ maxWidth: 150 }} />
-                        </div>
-                        <div>{item.description}</div>
-                      </Card>
-
-                      <div>
-                        owner:{" "}
-                        <Address
-                          address={item.owner}
-                          ensProvider={mainnetProvider}
-                          blockExplorer={blockExplorer}
-                          fontSize={16}
-                        />
-                        <AddressInput
-                          ensProvider={mainnetProvider}
-                          placeholder="transfer to address"
-                          value={transferToAddresses[id]}
-                          onChange={newValue => {
-                            const update = {};
-                            update[id] = newValue;
-                            setTransferToAddresses({ ...transferToAddresses, ...update });
-                          }}
-                        />
-                        <Button
-                          onClick={() => {
-                            console.log("writeContracts", writeContracts);
-                            tx(writeContracts.YourCollectible.transferFrom(address, transferToAddresses[id], id));
-                          }}
-                        >
-                          Transfer
-                        </Button>
-                      </div>
-                    </List.Item>
-                  );
-                }}
-              />
-            </div>
-          </Route>
-
-          <Route path="/quiz">
-            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-              <div style={{ fontSize: 20, padding: 8, marginTop: 32, fontWeight: "bold" }}>
-                <div>Timeleft:{timeLeft}</div>
-              </div>
-              <Row align="middle">
-                <Col span={8}>
-                  <span style={{ fontSize: 20, marginRight: 8, fontWeight: "bold" }}>Cat Amount</span> 300
-                </Col>
-
-                <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
-                  <span style={{ fontSize: 20, marginRight: 8, fontWeight: "bold" }}>Dog Amount</span> 400
-                </Col>
-                <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
-                  <span style={{ fontSize: 20, marginRight: 8, fontWeight: "bold" }}>Mouse Amount</span> 300
-                </Col>
-              </Row>
-              <br/>
-              <Row align="middle">
-                <Col span={4}>
-                  <span>Convert Before</span>
-                </Col>
-                <Col span={16}>
-                  <Select
-                    allowClear
-                    showSearch
-                    style={{ width: 200 }}
-                    placeholder="Select a pet"
-                    optionFilterProp="children"
-                    onChange={changePetSelect}
-                    onClear={clearPetSelect}
-                    filterOption={(input, option) =>
-                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                    }
-                    options={[
-                      {
-                        value: '1',
-                        label: 'Cat',
-                      },
-                      {
-                        value: '2',
-                        label: 'Dog',
-                      },
-                      {
-                        value: '3',
-                        label: 'Mouse',
-                      },
-                    ]}
-                  />
-                </Col>
-                <Col span={4}>
-                   <span>{ selectedPetCount }</span>
-                </Col>
-              </Row>
-              <br/>
-              <Row align="middle">
-                <Col span={4}>
-                  <span>Convert</span>
-                </Col>
-                <Col span={20}>
-                  <InputNumber min={0} defaultValue={0} value={selectedPetCount} />
-                  {(selectedPetValue !== "" && selectedPetValue !== "1")?
-                  <Button
-                    disabled={minting}
-                    shape="round"
-                    size="large"
-                    onClick={() => {
-                      mintItem();
-                    }}
-                    type="primary"
-                  >
-                    Convert Cat
-                  </Button>
-                  : ""
-                  }
-                  {(selectedPetValue !== "" && selectedPetValue !== "2")?
-                  <Button
-                    disabled={minting}
-                    shape="round"
-                    size="large"
-                    onClick={() => {
-                      mintItem();
-                    }}
-                    type="primary"
-                  >
-                    Convert Dog
-                  </Button>
-                  : ""
-                  }
-                  {(selectedPetValue !== "" && selectedPetValue !== "3")?
-                  <Button
-                    disabled={minting}
-                    shape="round"
-                    size="large"
-                    onClick={() => {
-                      mintItem();
-                    }}
-                    type="primary"
-                  >
-                    Convert Mouse
-                  </Button>
-                  : ""
-                  }
-                </Col>
-              </Row>
-            </div>
+            <WalletView
+              minting={minting}
+              mint={mintItem}
+              dataSource={yourCollectibles}
+              ensProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              transfer={(toAddress, id) => {
+                console.log("writeContracts", writeContracts);
+                tx(writeContracts.YourCollectible.transferFrom(address, toAddress, id));
+              }}
+            />
           </Route>
         </Switch>
       </BrowserRouter>
