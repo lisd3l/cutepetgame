@@ -30,8 +30,14 @@ const projectId = "2GajDLTC6y04qsYsoDRq9nGmWwK";
 const projectSecret = "48c62c6b3f82d2ecfa2cbe4c90f97037";
 const projectIdAndSecret = `${projectId}:${projectSecret}`;
 
-// 引入 IPFS 并创建 IPFS 实例
-const ipfsAPI = require('ipfs-core');
+const ipfsAPI = require("ipfs-http-client");
+
+const ipfs = ipfsAPI({
+  host: "ipfs.infura.io",
+  port: "5001",
+  protocol: "https",
+  headers: { authorization: `Basic ${Buffer.from(projectIdAndSecret).toString("base64")}` },
+});
 
 const { ethers } = require("ethers");
 
@@ -77,33 +83,19 @@ const STARTING_JSON = {
 // helper function to "Get" from IPFS
 // you usually go content.toString() after this...
 const getFromIPFS = async (cid, tokeId) => {
-  const ipfs = await ipfsAPI.create();
-  // 通过 IPFS 获取 NFT 集合元数据
-  const nftCollection = await ipfs.get(cid);
-  const nftCollectionData = JSON.parse(nftCollection[0].content.toString());
-  const tokenId = 
-  // 循环遍历每个 NFT
-  nftCollectionData.assets.forEach(async (asset) => {
-    if (tokeId === asset.token_id) {
-      // 获取 NFT CID
-      const nftCid = asset.token_id;
-
-      // 通过 IPFS 获取 NFT 元数据
-      const nft = await ipfs.get(nftCid);
-
-      // 将元数据 JSON 解析为 JavaScript 对象
-      const nftData = JSON.parse(nft[0].content.toString());
-
-      // 输出 NFT 的名称和描述
-      console.log(nftData.name);
-      console.log(nftData.description);
-
-      // 加载和显示 NFT 图片
-      const image = new Image();
-      image.src = 'https://ipfs.io/ipfs/' + nftData.image;
-      document.body.appendChild(image);
+  const stats = await ipfs.cat(cid)
+  const result = await  ipfs.get(cid);
+  for await (const file of result) {
+    console.log(file.path);
+    if (!file.content) continue;
+    const content = new BufferList();
+    const fileContent = await file.content;
+    for await (const chunk of fileContent) {
+      content.append(chunk);
     }
-  });
+    console.log(content);
+    return content;
+  }
 };
 
 // 🛰 providers
@@ -304,19 +296,26 @@ function App() {
           const tokenURI = await readContracts.AnimalParty.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
 
-          const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
-          console.log("ipfsHash", ipfsHash);
-          const cid = ipfsHash.replace("ipfs://", "").replace("/"+tokenId+".json", "");
+          const reg = /^\s+|\s+$/g;
 
-          const jsonManifestBuffer = await getFromIPFS(cid, tokenId);
-
-          try {
-            const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
-            console.log("jsonManifest", jsonManifest);
-            collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifest });
-          } catch (e) {
-            console.log(e);
+          // const jsonManifestBuffer = await getFromIPFS(cid, tokenId);
+          const response = await fetch("https://ipfs.io/ipfs/"+tokenURI.replace("ipfs://", "").replace(reg,''));
+          if (response.ok) {
+            const jsonManifestBuffer = await response.json();
+            console.log("jsonManijsonManifestBufferfest", jsonManifestBuffer);
+            const imageResponse = await fetch("https://ipfs.io/ipfs/"+jsonManifestBuffer.image.replace("ipfs://", "").replace(reg,''));
+            if (imageResponse.ok) {
+              jsonManifestBuffer.image = imageResponse.url;
+              collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifestBuffer });
+            }
           }
+          // try {
+          //   const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
+          //   console.log("jsonManifest", jsonManifest);
+          //   collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifest });
+          // } catch (e) {
+          //   console.log(e);
+          // }
         } catch (e) {
           console.log(e);
         }
