@@ -30,15 +30,8 @@ const projectId = "2GajDLTC6y04qsYsoDRq9nGmWwK";
 const projectSecret = "48c62c6b3f82d2ecfa2cbe4c90f97037";
 const projectIdAndSecret = `${projectId}:${projectSecret}`;
 
-const { BufferList } = require("bl");
-const ipfsAPI = require("ipfs-http-client");
-
-const ipfs = ipfsAPI({
-  host: "ipfs.infura.io",
-  port: "5001",
-  protocol: "https",
-  headers: { authorization: `Basic ${Buffer.from(projectIdAndSecret).toString("base64")}` },
-});
+// 引入 IPFS 并创建 IPFS 实例
+const ipfsAPI = require('ipfs-core');
 
 const { ethers } = require("ethers");
 
@@ -57,7 +50,7 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.bsctest; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -83,17 +76,34 @@ const STARTING_JSON = {
 
 // helper function to "Get" from IPFS
 // you usually go content.toString() after this...
-const getFromIPFS = async hashToGet => {
-  for await (const file of ipfs.get(hashToGet)) {
-    console.log(file.path);
-    if (!file.content) continue;
-    const content = new BufferList();
-    for await (const chunk of file.content) {
-      content.append(chunk);
+const getFromIPFS = async (cid, tokeId) => {
+  const ipfs = await ipfsAPI.create();
+  // 通过 IPFS 获取 NFT 集合元数据
+  const nftCollection = await ipfs.get(cid);
+  const nftCollectionData = JSON.parse(nftCollection[0].content.toString());
+  const tokenId = 
+  // 循环遍历每个 NFT
+  nftCollectionData.assets.forEach(async (asset) => {
+    if (tokeId === asset.token_id) {
+      // 获取 NFT CID
+      const nftCid = asset.token_id;
+
+      // 通过 IPFS 获取 NFT 元数据
+      const nft = await ipfs.get(nftCid);
+
+      // 将元数据 JSON 解析为 JavaScript 对象
+      const nftData = JSON.parse(nft[0].content.toString());
+
+      // 输出 NFT 的名称和描述
+      console.log(nftData.name);
+      console.log(nftData.description);
+
+      // 加载和显示 NFT 图片
+      const image = new Image();
+      image.src = 'https://ipfs.io/ipfs/' + nftData.image;
+      document.body.appendChild(image);
     }
-    console.log(content);
-    return content;
-  }
+  });
 };
 
 // 🛰 providers
@@ -112,7 +122,7 @@ const poktMainnetProvider = navigator.onLine
     )
   : null;
 const mainnetInfura = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider(`https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`)
+  ? new ethers.providers.StaticJsonRpcProvider(`https://data-seed-prebsc-2-s3.binance.org:8545`)
   : null;
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 
@@ -132,7 +142,7 @@ const walletLink = new WalletLink({
 });
 
 // WalletLink provider
-const walletLinkProvider = walletLink.makeWeb3Provider(`https://mainnet.infura.io/v3/${ALCHEMY_KEY}`, 1);
+const walletLinkProvider = walletLink.makeWeb3Provider(`https://data-seed-prebsc-2-s3.binance.org:8545`, 97);
 
 /* Web3 modal helps us "connect" external wallets: */
 const web3Modal = new Web3Modal({
@@ -146,6 +156,7 @@ const web3Modal = new Web3Modal({
         bridge: "https://polygon.bridge.walletconnect.org",
         infuraId: INFURA_ID,
         rpc: {
+          97: "https://data-seed-prebsc-2-s3.binance.org:8545",
           1: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`, // mainnet // For more WalletConnect providers: https://docs.walletconnect.org/quick-start/dapps/web3-provider#required
           42: `https://kovan.infura.io/v3/${INFURA_ID}`,
           100: "https://dai.poa.network", // xDai
@@ -270,34 +281,35 @@ function App() {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
+  const balance = useContractReader(readContracts, "AnimalParty", "balanceOf", [address]);
   console.log("🤗 balance:", balance);
 
   // 📟 Listen for broadcast events
-  const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
+  const transferEvents = useEventListener(readContracts, "AnimalParty", "Transfer", localProvider, 1);
   console.log("📟 Transfer events:", transferEvents);
 
   //
-  // 🧠 This effect will update yourCollectibles by polling when your balance changes
+  // 🧠 This effect will update animalPartys by polling when your balance changes
   //
   const yourBalance = balance && balance.toNumber && balance.toNumber();
-  const [yourCollectibles, setYourCollectibles] = useState([]);
+  const [animalPartys, setAnimalPartys] = useState([]);
 
   useEffect(() => {
-    const updateYourCollectibles = async () => {
+    const updateAnimalPartys = async () => {
       const collectibleUpdate = [];
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
         try {
           console.log("GEtting token index", tokenIndex);
-          const tokenId = await readContracts.YourCollectible.tokenOfOwnerByIndex(address, tokenIndex);
+          const tokenId = await readContracts.AnimalParty.tokenOfOwnerByIndex(address, tokenIndex);
           console.log("tokenId", tokenId);
-          const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId);
+          const tokenURI = await readContracts.AnimalParty.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
 
           const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
           console.log("ipfsHash", ipfsHash);
+          const cid = ipfsHash.replace("ipfs://", "").replace("/"+tokenId+".json", "");
 
-          const jsonManifestBuffer = await getFromIPFS(ipfsHash);
+          const jsonManifestBuffer = await getFromIPFS(cid, tokenId);
 
           try {
             const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
@@ -310,9 +322,9 @@ function App() {
           console.log(e);
         }
       }
-      setYourCollectibles(collectibleUpdate);
+      setAnimalPartys(collectibleUpdate);
     };
-    updateYourCollectibles();
+    updateAnimalPartys();
   }, [address, yourBalance]);
 
   /*
@@ -512,155 +524,8 @@ function App() {
   const [minting, setMinting] = useState(false);
   const [count, setCount] = useState(1);
 
-  // the json for the nfts
-  const json = {
-    1: {
-      description: "It's actually a bison?",
-      external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
-      image: "https://austingriffith.com/images/paintings/buffalo.jpg",
-      name: "Buffalo",
-      attributes: [
-        {
-          trait_type: "BackgroundColor",
-          value: "green",
-        },
-        {
-          trait_type: "Eyes",
-          value: "googly",
-        },
-        {
-          trait_type: "Stamina",
-          value: 42,
-        },
-      ],
-    },
-    2: {
-      description: "What is it so worried about?",
-      external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
-      image: "https://austingriffith.com/images/paintings/zebra.jpg",
-      name: "Zebra",
-      attributes: [
-        {
-          trait_type: "BackgroundColor",
-          value: "blue",
-        },
-        {
-          trait_type: "Eyes",
-          value: "googly",
-        },
-        {
-          trait_type: "Stamina",
-          value: 38,
-        },
-      ],
-    },
-    3: {
-      description: "What a horn!",
-      external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
-      image: "https://austingriffith.com/images/paintings/rhino.jpg",
-      name: "Rhino",
-      attributes: [
-        {
-          trait_type: "BackgroundColor",
-          value: "pink",
-        },
-        {
-          trait_type: "Eyes",
-          value: "googly",
-        },
-        {
-          trait_type: "Stamina",
-          value: 22,
-        },
-      ],
-    },
-    4: {
-      description: "Is that an underbyte?",
-      external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
-      image: "https://austingriffith.com/images/paintings/fish.jpg",
-      name: "Fish",
-      attributes: [
-        {
-          trait_type: "BackgroundColor",
-          value: "blue",
-        },
-        {
-          trait_type: "Eyes",
-          value: "googly",
-        },
-        {
-          trait_type: "Stamina",
-          value: 15,
-        },
-      ],
-    },
-    5: {
-      description: "So delicate.",
-      external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
-      image: "https://austingriffith.com/images/paintings/flamingo.jpg",
-      name: "Flamingo",
-      attributes: [
-        {
-          trait_type: "BackgroundColor",
-          value: "black",
-        },
-        {
-          trait_type: "Eyes",
-          value: "googly",
-        },
-        {
-          trait_type: "Stamina",
-          value: 6,
-        },
-      ],
-    },
-    6: {
-      description: "Raaaar!",
-      external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
-      image: "https://austingriffith.com/images/paintings/godzilla.jpg",
-      name: "Godzilla",
-      attributes: [
-        {
-          trait_type: "BackgroundColor",
-          value: "orange",
-        },
-        {
-          trait_type: "Eyes",
-          value: "googly",
-        },
-        {
-          trait_type: "Stamina",
-          value: 99,
-        },
-      ],
-    },
-  };
-
   const mintItem = async () => {
-    // upload to ipfs
-    const uploaded = await ipfs.add(JSON.stringify(json[count]));
-    setCount(count + 1);
-    console.log("Uploaded Hash: ", uploaded);
-    const result = tx(
-      writeContracts &&
-        writeContracts.YourCollectible &&
-        writeContracts.YourCollectible.mintItem(address, uploaded.path),
-      update => {
-        console.log("📡 Transaction Update:", update);
-        if (update && (update.status === "confirmed" || update.status === 1)) {
-          console.log(" 🍾 Transaction " + update.hash + " finished!");
-          console.log(
-            " ⛽️ " +
-              update.gasUsed +
-              "/" +
-              (update.gasLimit || update.gas) +
-              " @ " +
-              parseFloat(update.gasPrice) / 1000000000 +
-              " gwei",
-          );
-        }
-      },
-    );
+    // transfer to mint page
   };
 
   return (
@@ -712,12 +577,12 @@ function App() {
             <WalletView
               minting={minting}
               mint={mintItem}
-              dataSource={yourCollectibles}
+              dataSource={animalPartys}
               ensProvider={mainnetProvider}
               blockExplorer={blockExplorer}
               transfer={(toAddress, id) => {
                 console.log("writeContracts", writeContracts);
-                tx(writeContracts.YourCollectible.transferFrom(address, toAddress, id));
+                tx(writeContracts.AnimalParty.transferFrom(address, toAddress, id));
               }}
             />
           </Route>

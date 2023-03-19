@@ -1,7 +1,7 @@
 // MY INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
 export const INFURA_ID = process.env.REACT_APP_INFURA_KEY ?? "460f40a260564ac4a4f4b3fffb032dad";
 // My Alchemy Key, swap in yours from https://dashboard.alchemyapi.io/
-export const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_KEY ?? "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
+export const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_KEY ?? "QlKWV4qnrA1nePofSvVlRp5QQU-NRZWc";
 
 // MY ETHERSCAN_ID, SWAP IN YOURS FROM https://etherscan.io/myapikey
 export const ETHERSCAN_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY ?? "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
@@ -223,6 +223,13 @@ export const NETWORKS = {
     blockExplorer: "https://moonbeam-explorer.netlify.app/",
     rpcUrl: "http://127.0.0.1:9933",
   },
+  bsctest: {
+    name: "BSCTest",
+    color: "#0975F6",
+    chainId: 97,
+    blockExplorer: "https://testnet.bscscan.com/",
+    rpcUrl:"https://data-seed-prebsc-2-s3.binance.org:8545",
+  }
 };
 
 export const NETWORK = chainId => {
