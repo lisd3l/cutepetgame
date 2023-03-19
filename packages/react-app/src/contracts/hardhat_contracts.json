@@ -5,7 +5,7 @@
       "chainId": "5",
       "contracts": {
         "AnimalParty": {
-          "address": "0xe50f705b7571b70aeaccaccd338c74ecdf083b93",
+          "address": "0x9e5f0f8055a372B3087FBED5Dfe57c2177d52d9C",
           "abi": [
             {
               "inputs": [
