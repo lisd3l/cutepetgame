@@ -50,7 +50,7 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.bsctest; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -122,7 +122,7 @@ const poktMainnetProvider = navigator.onLine
     )
   : null;
 const mainnetInfura = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider(`https://data-seed-prebsc-2-s3.binance.org:8545`)
+  ? new ethers.providers.StaticJsonRpcProvider(`https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`)
   : null;
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 
@@ -142,7 +142,7 @@ const walletLink = new WalletLink({
 });
 
 // WalletLink provider
-const walletLinkProvider = walletLink.makeWeb3Provider(`https://data-seed-prebsc-2-s3.binance.org:8545`, 97);
+const walletLinkProvider = walletLink.makeWeb3Provider(`https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`, 5);
 
 /* Web3 modal helps us "connect" external wallets: */
 const web3Modal = new Web3Modal({
@@ -156,8 +156,7 @@ const web3Modal = new Web3Modal({
         bridge: "https://polygon.bridge.walletconnect.org",
         infuraId: INFURA_ID,
         rpc: {
-          97: "https://data-seed-prebsc-2-s3.binance.org:8545",
-          1: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`, // mainnet // For more WalletConnect providers: https://docs.walletconnect.org/quick-start/dapps/web3-provider#required
+          5: `https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`, // mainnet // For more WalletConnect providers: https://docs.walletconnect.org/quick-start/dapps/web3-provider#required
           42: `https://kovan.infura.io/v3/${INFURA_ID}`,
           100: "https://dai.poa.network", // xDai
         },

@@ -1,8 +1,8 @@
 {
-  "97": [
+  "5": [
     {
-      "name": "BSCTest",
-      "chainId": "97",
+      "name": "goerli",
+      "chainId": "5",
       "contracts": {
         "AnimalParty": {
           "address": "0xe50f705b7571b70aeaccaccd338c74ecdf083b93",
