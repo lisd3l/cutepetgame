@@ -30,15 +30,6 @@ const projectId = "2GajDLTC6y04qsYsoDRq9nGmWwK";
 const projectSecret = "48c62c6b3f82d2ecfa2cbe4c90f97037";
 const projectIdAndSecret = `${projectId}:${projectSecret}`;
 
-const ipfsAPI = require("ipfs-http-client");
-
-const ipfs = ipfsAPI({
-  host: "ipfs.infura.io",
-  port: "5001",
-  protocol: "https",
-  headers: { authorization: `Basic ${Buffer.from(projectIdAndSecret).toString("base64")}` },
-});
-
 const { ethers } = require("ethers");
 
 /*
@@ -78,24 +69,6 @@ const STARTING_JSON = {
       value: "googly",
     },
   ],
-};
-
-// helper function to "Get" from IPFS
-// you usually go content.toString() after this...
-const getFromIPFS = async (cid, tokeId) => {
-  const stats = await ipfs.cat(cid)
-  const result = await  ipfs.get(cid);
-  for await (const file of result) {
-    console.log(file.path);
-    if (!file.content) continue;
-    const content = new BufferList();
-    const fileContent = await file.content;
-    for await (const chunk of fileContent) {
-      content.append(chunk);
-    }
-    console.log(content);
-    return content;
-  }
 };
 
 // 🛰 providers
@@ -513,15 +486,7 @@ function App() {
     );
   }
 
-  const [yourJSON, setYourJSON] = useState(STARTING_JSON);
-  const [sending, setSending] = useState();
-  const [ipfsHash, setIpfsHash] = useState();
-  const [ipfsDownHash, setIpfsDownHash] = useState();
-  const [downloading, setDownloading] = useState();
-  const [ipfsContent, setIpfsContent] = useState();
   const [minting, setMinting] = useState(false);
-  const [count, setCount] = useState(1);
-
   const mintItem = async () => {
     // transfer to mint page
   };
