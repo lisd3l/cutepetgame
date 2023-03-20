@@ -1,1 +1,1 @@
-module.exports = ["AnimalParty"];
+module.exports = ["AnimalParty", "MyContract"];
