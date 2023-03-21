@@ -21,9 +21,12 @@ const QuizItems = [
   }
 ]
 
-const numPad = str => `0${str}`.slice(-2)
+const numPad = (str: string) => `0${str}`.slice(-2)
 
-export default function WalletView(props) {
+interface WallViewProps {
+}
+
+export default function WalletView(props: any) {
 
   const [timeLeft, setTimeLeft] = useState('');
   useEffect(() => {

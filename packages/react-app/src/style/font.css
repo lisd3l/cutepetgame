@@ -1,0 +1,53 @@
+@font-face {
+  font-family: "Pinzelan";
+  src: local("Pinzelan"),
+    url("../assets/fonts/pinzelan/opentype/Pinzelan-Regular.otf") format("opentype"),
+    url("../assets/fonts/pinzelan/truetype/Pinzelan-Regular.ttf") format("truetype"),
+    url("../assets/fonts/pinzelan/webopenfontformat/Pinzelan-Regular.woff") format("woff"),
+    url("../assets/fonts/pinzelan/webopenfontformat/Pinzelan-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "PinzelanItalic";
+  src: local("PinzelanItalic"),
+    url("../assets/fonts/pinzelan/opentype/Pinzelan-Italic.otf") format("opentype"),
+    url("../assets/fonts/pinzelan/truetype/Pinzelan-Italic.ttf") format("truetype"),
+    url("../assets/fonts/pinzelan/webopenfontformat/Pinzelan-Italic.woff") format("woff"),
+    url("../assets/fonts/pinzelan/webopenfontformat/Pinzelan-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Rainbow2000";
+  src: local("Rainbow2000"),
+    url("../assets/fonts/rainbow2000/opentype/Rainbow2000-Regular.otf") format("opentype"),
+    url("../assets/fonts/rainbow2000/truetype/Rainbow2000-Regular.ttf") format("truetype"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-Regular.woff") format("woff"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Rainbow2000Italic";
+  src: local("Rainbow2000Italic"),
+    url("../assets/fonts/rainbow2000/opentype/Rainbow2000-Italic.otf") format("opentype"),
+    url("../assets/fonts/rainbow2000/truetype/Rainbow2000-Italic.ttf") format("truetype"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-Italic.woff") format("woff"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Rainbow2000Bold";
+  src: local("Rainbow2000Bold"),
+    url("../assets/fonts/rainbow2000/opentype/Rainbow2000-Bold.otf") format("opentype"),
+    url("../assets/fonts/rainbow2000/truetype/Rainbow2000-Bold.ttf") format("truetype"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-Bold.woff") format("woff"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Rainbow2000BoldItalic";
+  src: local("Rainbow2000BoldItalic"),
+    url("../assets/fonts/rainbow2000/opentype/Rainbow2000-BoldItalic.otf") format("opentype"),
+    url("../assets/fonts/rainbow2000/truetype/Rainbow2000-BoldItalic.ttf") format("truetype"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-BoldItalic.woff") format("woff"),
+    url("../assets/fonts/rainbow2000/webopenfontformat/Rainbow2000-BoldItalic.woff2") format("woff2");
+}

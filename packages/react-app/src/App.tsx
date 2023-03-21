@@ -1,8 +1,5 @@
-import Portis from "@portis/web3";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { Alert, Button, Card, Col, Select, List, Menu, Row, InputNumber } from "antd";
+import { Button, Col, Menu, Row, InputNumber } from "antd";
 import "antd/dist/antd.css";
-import Authereum from "authereum";
 import {
   useBalance,
   useContractLoader,
@@ -13,22 +10,18 @@ import {
 } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import { useEventListener } from "eth-hooks/events/useEventListener";
-import Fortmatic from "fortmatic";
 import React, { useCallback, useEffect, useState } from "react";
-import ReactJson from "react-json-view";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 //import Torus from "@toruslabs/torus-embed"
-import WalletLink from "walletlink";
-import Web3Modal from "web3modal";
 import "./App.css";
-import { Account, Address, AddressInput, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch, WalletView } from "./components";
-import { INFURA_ID, NETWORK, NETWORKS, ALCHEMY_KEY } from "./constants";
+import { Account, Faucet, GasGauge, Header, Ramp, WalletView } from "./components";
+import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import { Transactor } from "./helpers";
-import { useContractConfig } from "./hooks";
+import { useContractConfig, useNetworkDisplay, useWeb3Modal } from "./hooks";
 
-const projectId = "2GajDLTC6y04qsYsoDRq9nGmWwK";
-const projectSecret = "48c62c6b3f82d2ecfa2cbe4c90f97037";
-const projectIdAndSecret = `${projectId}:${projectSecret}`;
+// const projectId = "2GajDLTC6y04qsYsoDRq9nGmWwK";
+// const projectSecret = "48c62c6b3f82d2ecfa2cbe4c90f97037";
+// const projectIdAndSecret = `${projectId}:${projectSecret}`;
 
 const { ethers } = require("ethers");
 
@@ -51,7 +44,6 @@ const targetNetwork = NETWORKS.goerli; // <------- select your target frontend n
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
-const NETWORKCHECK = true;
 
 // EXAMPLE STARTING JSON:
 const STARTING_JSON = {
@@ -101,67 +93,6 @@ const localProvider = new ethers.providers.StaticJsonRpcProvider(localProviderUr
 // 🔭 block explorer URL
 const blockExplorer = targetNetwork.blockExplorer;
 
-// Coinbase walletLink init
-const walletLink = new WalletLink({
-  appName: "coinbase",
-});
-
-// WalletLink provider
-const walletLinkProvider = walletLink.makeWeb3Provider(`https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`, 5);
-
-/* Web3 modal helps us "connect" external wallets: */
-const web3Modal = new Web3Modal({
-  network: "mainnet", // Optional. If using WalletConnect on xDai, change network to "xdai" and add RPC info below for xDai chain.
-  cacheProvider: true, // optional
-  theme: "light", // optional. Change to "dark" for a dark theme.
-  providerOptions: {
-    walletconnect: {
-      package: WalletConnectProvider, // required
-      options: {
-        bridge: "https://polygon.bridge.walletconnect.org",
-        infuraId: INFURA_ID,
-        rpc: {
-          5: `https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`, // mainnet // For more WalletConnect providers: https://docs.walletconnect.org/quick-start/dapps/web3-provider#required
-          42: `https://kovan.infura.io/v3/${INFURA_ID}`,
-          100: "https://dai.poa.network", // xDai
-        },
-      },
-    },
-    portis: {
-      display: {
-        logo: "https://user-images.githubusercontent.com/9419140/128913641-d025bc0c-e059-42de-a57b-422f196867ce.png",
-        name: "Portis",
-        description: "Connect to Portis App",
-      },
-      package: Portis,
-      options: {
-        id: "6255fb2b-58c8-433b-a2c9-62098c05ddc9",
-      },
-    },
-    fortmatic: {
-      package: Fortmatic, // required
-      options: {
-        key: "pk_live_5A7C91B2FC585A17", // required
-      },
-    },
-    "custom-walletlink": {
-      display: {
-        logo: "https://play-lh.googleusercontent.com/PjoJoG27miSglVBXoXrxBSLveV6e3EeBPpNY55aiUUBM9Q1RCETKCOqdOkX2ZydqVf0",
-        name: "Coinbase",
-        description: "Connect to Coinbase Wallet (not Coinbase App)",
-      },
-      package: walletLinkProvider,
-      connector: async (provider, _options) => {
-        await provider.enable();
-        return provider;
-      },
-    },
-    authereum: {
-      package: Authereum, // required
-    },
-  },
-});
-
 function App() {
   const mainnetProvider =
     poktMainnetProvider && poktMainnetProvider._isProvider
@@ -170,18 +101,8 @@ function App() {
       ? scaffoldEthProvider
       : mainnetInfura;
 
-  const [injectedProvider, setInjectedProvider] = useState();
-  const [address, setAddress] = useState();
-
-  const logoutOfWeb3Modal = async () => {
-    await web3Modal.clearCachedProvider();
-    if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect == "function") {
-      await injectedProvider.provider.disconnect();
-    }
-    setTimeout(() => {
-      window.location.reload();
-    }, 1);
-  };
+  const { web3Modal, injectedProvider, loadWeb3Modal, logoutOfWeb3Modal } = useWeb3Modal();
+  const [address, setAddress] = useState("");
 
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
@@ -190,7 +111,7 @@ function App() {
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider);
-  const userSigner = userProviderAndSigner.signer;
+  const userSigner = userProviderAndSigner?.signer;
 
   useEffect(() => {
     async function getAddress() {
@@ -203,9 +124,8 @@ function App() {
   }, [userSigner]);
 
   // You can warn the user if you would like them to be on a specific network
-  const localChainId = localProvider && localProvider._network && localProvider._network.chainId;
-  const selectedChainId =
-    userSigner && userSigner.provider && userSigner.provider._network && userSigner.provider._network.chainId;
+  const localChainId = localProvider?._network?.chainId;
+  const selectedChainId: number = userSigner?.provider?._network?.chainId;
 
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
@@ -245,7 +165,8 @@ function App() {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const balance = useContractReader(readContracts, "AnimalParty", "balanceOf", [address]);
+  const balance: any = useContractReader(readContracts, "AnimalParty", "balanceOf", [address]);
+
   console.log("🤗 balance:", balance);
 
   // 📟 Listen for broadcast events
@@ -256,11 +177,11 @@ function App() {
   // 🧠 This effect will update animalPartys by polling when your balance changes
   //
   const yourBalance = balance && balance.toNumber && balance.toNumber();
-  const [animalPartys, setAnimalPartys] = useState([]);
+  const [animalPartys, setAnimalPartys] = useState<any[]>([]);
 
   useEffect(() => {
     const updateAnimalPartys = async () => {
-      const collectibleUpdate = [];
+      const collectibleUpdate: any[] = [];
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
         try {
           console.log("GEtting token index", tokenIndex);
@@ -294,8 +215,10 @@ function App() {
         }
       }
       setAnimalPartys(collectibleUpdate);
+
     };
     updateAnimalPartys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, yourBalance]);
 
   /*
@@ -339,124 +262,14 @@ function App() {
     mainnetContracts,
   ]);
 
-  let networkDisplay = "";
-  if (NETWORKCHECK && localChainId && selectedChainId && localChainId !== selectedChainId) {
-    const networkSelected = NETWORK(selectedChainId);
-    const networkLocal = NETWORK(localChainId);
-    if (selectedChainId === 1337 && localChainId === 31337) {
-      networkDisplay = (
-        <div style={{ zIndex: 2, position: "absolute", right: 0, top: 60, padding: 16 }}>
-          <Alert
-            message="⚠️ Wrong Network ID"
-            description={
-              <div>
-                You have <b>chain id 1337</b> for localhost and you need to change it to <b>31337</b> to work with
-                HardHat.
-                <div>(MetaMask -&gt; Settings -&gt; Networks -&gt; Chain ID -&gt; 31337)</div>
-              </div>
-            }
-            type="error"
-            closable={false}
-          />
-        </div>
-      );
-    } else {
-      networkDisplay = (
-        <div style={{ zIndex: 2, position: "absolute", right: 0, top: 60, padding: 16 }}>
-          <Alert
-            message="⚠️ Wrong Network"
-            description={
-              <div>
-                You have <b>{networkSelected && networkSelected.name}</b> selected and you need to be on{" "}
-                <Button
-                  onClick={async () => {
-                    const ethereum = window.ethereum;
-                    const data = [
-                      {
-                        chainId: "0x" + targetNetwork.chainId.toString(16),
-                        chainName: targetNetwork.name,
-                        nativeCurrency: targetNetwork.nativeCurrency,
-                        rpcUrls: [targetNetwork.rpcUrl],
-                        blockExplorerUrls: [targetNetwork.blockExplorer],
-                      },
-                    ];
-                    console.log("data", data);
+  const networkDisplay = useNetworkDisplay(localChainId, selectedChainId);
 
-                    let switchTx;
-                    // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
-                    try {
-                      switchTx = await ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: data[0].chainId }],
-                      });
-                    } catch (switchError) {
-                      // not checking specific error code, because maybe we're not using MetaMask
-                      try {
-                        switchTx = await ethereum.request({
-                          method: "wallet_addEthereumChain",
-                          params: data,
-                        });
-                      } catch (addError) {
-                        // handle "add" error
-                      }
-                    }
-
-                    if (switchTx) {
-                      console.log(switchTx);
-                    }
-                  }}
-                >
-                  <b>{networkLocal && networkLocal.name}</b>
-                </Button>
-              </div>
-            }
-            type="error"
-            closable={false}
-          />
-        </div>
-      );
-    }
-  } else {
-    networkDisplay = (
-      <div style={{ zIndex: -1, position: "absolute", right: 154, top: 28, padding: 16, color: targetNetwork.color }}>
-        {targetNetwork.name}
-      </div>
-    );
-  }
-
-  const loadWeb3Modal = useCallback(async () => {
-    const provider = await web3Modal.connect();
-    setInjectedProvider(new ethers.providers.Web3Provider(provider));
-
-    provider.on("chainChanged", chainId => {
-      console.log(`chain changed to ${chainId}! updating providers`);
-      setInjectedProvider(new ethers.providers.Web3Provider(provider));
-    });
-
-    provider.on("accountsChanged", () => {
-      console.log(`account changed!`);
-      setInjectedProvider(new ethers.providers.Web3Provider(provider));
-    });
-
-    // Subscribe to session disconnection
-    provider.on("disconnect", (code, reason) => {
-      console.log(code, reason);
-      logoutOfWeb3Modal();
-    });
-  }, [setInjectedProvider]);
-
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
-    }
-  }, [loadWeb3Modal]);
-
-  const [route, setRoute] = useState();
+  const [route, setRoute] = useState<string>("");
   useEffect(() => {
     setRoute(window.location.pathname);
   }, [setRoute]);
 
-  let faucetHint = "";
+  let faucetHint: JSX.Element = <></>;
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
 
   const [faucetClicked, setFaucetClicked] = useState(false);
@@ -464,16 +277,16 @@ function App() {
     !faucetClicked &&
     localProvider &&
     localProvider._network &&
-    localProvider._network.chainId == 31337 &&
+    localProvider._network.chainId === 31337 &&
     yourLocalBalance &&
-    ethers.utils.formatEther(yourLocalBalance) <= 0
+    +ethers.utils.formatEther(yourLocalBalance) <= 0
   ) {
     faucetHint = (
       <div style={{ padding: 16 }}>
         <Button
           type="primary"
           onClick={() => {
-            faucetTx({
+            faucetTx?.({
               to: address,
               value: ethers.utils.parseEther("0.01"),
             });
@@ -485,11 +298,12 @@ function App() {
       </div>
     );
   }
-
+  
   const [minting, setMinting] = useState(false);
-  const mintItem = async () => {
+
+  const mintItem = useCallback(async () => {
     // transfer to mint page
-  };
+  }, []);
 
   return (
     <div className="App">
@@ -505,7 +319,7 @@ function App() {
               }}
               to="/"
             >
-              Mint
+              <div style={{fontFamily: "PinzelanItalic", fontSize: 12}}>Mint</div>
             </Link>
           </Menu.Item>
           <Menu.Item key="/wallet">
@@ -515,7 +329,7 @@ function App() {
               }}
               to="/wallet"
             >
-              Wallet
+              <div  style={{fontFamily: "Rainbow2000Bold", fontSize: 12}}>Wallet</div>
             </Link>
           </Menu.Item>
         </Menu>
@@ -544,15 +358,13 @@ function App() {
               ensProvider={mainnetProvider}
               blockExplorer={blockExplorer}
               transfer={(toAddress, id) => {
-                console.log("writeContracts", writeContracts);
+                console.log("writeContracts", writeContracts);       
                 tx(writeContracts.AnimalParty.transferFrom(address, toAddress, id));
               }}
             />
           </Route>
         </Switch>
       </BrowserRouter>
-
-      <ThemeSwitch />
 
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>

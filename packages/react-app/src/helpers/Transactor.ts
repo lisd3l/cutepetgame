@@ -1,31 +1,36 @@
 import { notification } from "antd";
 import Notify from "bnc-notify";
 import { BLOCKNATIVE_DAPPID } from "../constants";
-
-const { ethers } = require("ethers");
+import { ethers, Signer } from "ethers";
 
 // this should probably just be renamed to "notifier"
 // it is basically just a wrapper around BlockNative's wonderful Notify.js
 // https://docs.blocknative.com/notify
-const callbacks = {};
+const callbacks: {
+  [key: string]: (tx: any) => void;
+} = {};
 
 const DEBUG = true;
 
-export default function Transactor(providerOrSigner, gasPrice, etherscan) {
+export default function Transactor(
+  providerOrSigner?: Signer | ethers.providers.Provider,
+  gasPrice?: number,
+  etherscan?: string,
+) {
   if (typeof providerOrSigner !== "undefined") {
     // eslint-disable-next-line consistent-return
-    return async (tx, callback) => {
-      let signer;
-      let network;
-      let provider;
+    return async (tx: any, callback?: (tx: any) => void) => {
+      let signer: ethers.Signer;
+      let network: ethers.providers.Network;
+      let provider: ethers.providers.Provider;
       if (ethers.Signer.isSigner(providerOrSigner) === true) {
-        provider = providerOrSigner.provider;
-        signer = providerOrSigner;
-        network = providerOrSigner.provider && (await providerOrSigner.provider.getNetwork());
-      } else if (providerOrSigner._isProvider) {
-        provider = providerOrSigner;
-        signer = providerOrSigner.getSigner();
-        network = await providerOrSigner.getNetwork();
+        signer = providerOrSigner as Signer;
+        provider = signer.provider;
+        network = await provider?.getNetwork();
+      } else if ((providerOrSigner as ethers.providers.Provider)._isProvider) {
+        provider = providerOrSigner as ethers.providers.Provider;
+        signer = (provider as any).getSigner();
+        network = await provider.getNetwork();
       }
 
       console.log("network", network);
@@ -36,9 +41,9 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
         options = {
           dappId: BLOCKNATIVE_DAPPID, // GET YOUR OWN KEY AT https://account.blocknative.com
           system: "ethereum",
-          networkId: network.chainId,
+          networkId: network?.chainId,
           // darkMode: Boolean, // (default: false)
-          transactionHandler: txInformation => {
+          transactionHandler: (txInformation: any) => {
             if (DEBUG) console.log("HANDLE TX", txInformation);
             const possibleFunction = callbacks[txInformation.transaction.hash];
             if (typeof possibleFunction === "function") {
@@ -51,12 +56,12 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
       }
 
       let etherscanNetwork = "";
-      if (network.name && network.chainId > 1) {
+      if (network && network.name && network.chainId > 1) {
         etherscanNetwork = network.name + ".";
       }
 
       let etherscanTxUrl = "https://" + etherscanNetwork + "etherscan.io/tx/";
-      if (network.chainId === 100) {
+      if (network?.chainId === 100) {
         etherscanTxUrl = "https://blockscout.com/poa/xdai/tx/";
       }
 
@@ -73,7 +78,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
             tx.gasLimit = ethers.utils.hexlify(120000);
           }
           if (DEBUG) console.log("RUNNING TX", tx);
-          result = await signer.sendTransaction(tx);
+          result = await signer?.sendTransaction(tx);
         }
         if (DEBUG) console.log("RESULT:", result);
         // console.log("Notify", notify);

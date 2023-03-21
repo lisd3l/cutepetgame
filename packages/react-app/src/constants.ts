@@ -24,7 +24,19 @@ const localRpcUrl = process.env.REACT_APP_CODESPACES
   ? `https://${window.location.hostname.replace("3000", "8545")}`
   : "http://" + (global.window ? window.location.hostname : "localhost") + ":8545";
 
-export const NETWORKS = {
+export const NETWORKS: {
+  [key: string]: {
+    name: string,
+    color: string,
+    chainId: number,
+    blockExplorer: string,
+    rpcUrl: string,
+    faucet?: string,
+    price?: number,
+    gasPrice?: number,
+    nativeCurrency?: number,
+  }
+} = {
   localhost: {
     name: "localhost",
     color: "#666666",
@@ -225,10 +237,17 @@ export const NETWORKS = {
   },
 };
 
-export const NETWORK = chainId => {
+export const NETWORK = (chainId: number) => {
   for (const n in NETWORKS) {
     if (NETWORKS[n].chainId === chainId) {
       return NETWORKS[n];
     }
   }
 };
+
+
+/// 📡 What chain are your contracts deployed to?
+// <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+export const getTargetNetwork = () => {
+  return NETWORKS.goerli;
+}
