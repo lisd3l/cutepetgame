@@ -38,6 +38,7 @@ import Wallet from "./Wallet";
               (ex. by default "https://etherscan.io/" or for xdai "https://blockscout.com/poa/xdai/")
 */
 
+// @ts-ignore
 export default function Account({
   address,
   userSigner,

@@ -3,7 +3,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./index.css";
-import { BrowserRouter } from "react-router-dom";
 
 const subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract";
 
@@ -14,9 +13,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <BrowserRouter>
-      <App subgraphUri={subgraphUri} />
-    </BrowserRouter>
+    <App subgraphUri={subgraphUri} />
   </ApolloProvider>,
   document.getElementById("root"),
 );

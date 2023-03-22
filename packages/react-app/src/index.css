@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './style/vars';
 @import './style/font';
 @import './style/page';
 @import './style/common';

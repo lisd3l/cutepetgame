@@ -1,0 +1,122 @@
+.page {
+  height: 100vh;
+  @apply m-0 p-0 relative text-white;
+}
+
+.page-home {
+  background-color: var(--theme-color-2);
+}
+
+.page-mint {
+  background-color: var(--theme-color);
+}
+
+.section-content {
+  min-height: 100vh;
+  padding-bottom: var(--footer-height);
+}
+
+footer.section-footer {
+  height: var(--footer-height);
+  margin-top: calc(var(--footer-height) * -1);
+  padding: 120px 144px;
+  background: url(../assets/imgs/footer-bg.png) center bottom / 100% auto no-repeat, var(--theme-color);
+
+  .media-icon {
+    @apply text-ptext hover:opacity-80 w-8 h-8 mr-2 flex items-center justify-center;
+  }
+
+  .col-title {
+    background: linear-gradient(90deg, #AD1BAF 19.79%, #413D47 77.6%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+}
+
+header {
+  @apply fixed inset-x-0 z-10;
+  top: 85px;
+
+  .header {
+    background: rgba(37, 31, 65, 0.2);
+    box-shadow: 0px 30px 30px rgba(41, 21, 85, 0.3);
+    backdrop-filter: blur(30px);
+
+    @apply mx-auto flex items-center justify-end;
+    max-width: 1632px;
+    width: 85vw;
+    height: 90px;
+    border-radius: 40px;
+    padding: 0 3.676%;
+
+    &:before {
+      content: "";
+      position: absolute;
+      left: 3.676%;
+      bottom: 12px;
+      width: 262px;
+      height: 125px;
+      background: url(../assets/imgs/header-logo.png) center / cover no-repeat at-2x;
+    }
+
+    nav {
+      @apply font-rb2 text-3xs text-white;
+
+      a {
+        @apply ml-10;
+      }
+    }
+  }
+}
+
+.home-banner {
+  z-index: 1;
+}
+
+.home-section-intro {
+  padding-top: 132px;
+  padding-bottom: 161px;
+  background: url(../assets/imgs/section-line.png) bottom center / 100% auto no-repeat;
+
+  &:before,
+  &:after {
+    content: '';
+    @apply absolute;
+    width: 910px;
+    height: 910px;
+  }
+
+  &:before {
+    top: -352px;
+    right: -455px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(35, 141, 118, 0.75) 0%, rgba(13, 44, 38, 0) 100%);
+  }
+
+  &:after {
+    bottom: -12px;
+    left: -455px;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(35, 141, 118, 0.75) 0%, rgba(13, 44, 38, 0) 100%);
+  }
+
+  .content {
+    max-width: 750px;
+  }
+}
+
+.home-section-assets {
+  background: url(../assets/imgs/section-line.png) top center / 100% auto no-repeat;
+}
+
+.section-gap1 {
+  margin-bottom: 68px;
+}
+
+.section-gap2 {
+  margin-bottom: 120px;
+}
+
+.section-pb2 {
+  margin-bottom: 120px;
+}

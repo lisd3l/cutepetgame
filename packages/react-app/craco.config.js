@@ -2,7 +2,12 @@
 module.exports = {
   style: {
     postcss: {
-      plugins: [require("tailwindcss"), require("autoprefixer")],
+      plugins: [
+        require("tailwindcss"),
+        require("autoprefixer"),
+        require("postcss-nested"),
+        require("postcss-at2x")(),
+      ],
     },
   },
   eslint: {
