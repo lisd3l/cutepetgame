@@ -135,3 +135,16 @@ header {
 .home-section-assets {
   background: url(../assets/imgs/section-line.png) top center / 100% auto no-repeat;
 }
+
+.section-bonus {
+  @apply relative;
+
+  &:before {
+    content: '';
+    @apply absolute right-0;
+    top: -230px;
+    width: 447px;
+    height: 322px;
+    background: url(../assets/imgs/intro.png) center / cover no-repeat;
+  }
+}

@@ -97,7 +97,9 @@ export default function Home() {
             <div className="p-title mb-68px" id="bouns" data-anchor="bouns">
               Bonus
             </div>
-            <div className="leading-tight tracking-wide text-3xs">Users who invite others can receive NFT bonuses.</div>
+            <div className="leading-tight tracking-wide section-bonus text-3xs">
+              Users who invite others can receive NFT bonuses.
+            </div>
           </div>
           <div className="mb-120px">
             <div className="p-title mb-68px" id="fairness" data-anchor="fairness">
@@ -148,7 +150,7 @@ export default function Home() {
         </div>
         <div className="relative overflow-hidden text-xs text-center pt-52 pb-120px px-36 bg-theme2 home-section-assets">
           <div className="p-title mb-120px">Assets held for pet</div>
-          <div className="inline-flex items-center">
+          <div className="flex items-center justify-center">
             <div className="stat-col">
               <div className="stat-thumb stat-mouse"></div>
               <div className="mt-10 font-semibold leading-tight text-4xs">↑ 12,456</div>
