@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Footer, Content, Header } from "../components";
+import { Footer, Content, Header, PetCarousel } from "../components";
 import BannerBg from "../assets/imgs/banner.png";
 import video1 from "../assets/videos/bv01.mp4";
 import video2 from "../assets/videos/bv02.mp4";
@@ -61,7 +61,6 @@ export default function Home() {
           <a href="#community">community</a>
           <a href="#roadmap">RoadMap</a>
           <a href="/wallet">MYWallet</a>
-          <a href="/mint">Mint</a>
         </Header>
         <div className="relative home-banner">
           <video
@@ -143,11 +142,26 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="relative pt-16 overflow-hidden text-xs pb-44 px-36 bg-theme2">
+        <div className="relative pt-16 overflow-hidden text-xs pl-36 bg-theme2 pb-120px">
           <div className="p-title mb-68px">Recently Pet</div>
+          <PetCarousel></PetCarousel>
         </div>
         <div className="relative overflow-hidden text-xs text-center pt-52 pb-120px px-36 bg-theme2 home-section-assets">
           <div className="p-title mb-120px">Assets held for pet</div>
+          <div className="inline-flex items-center">
+            <div className="stat-col">
+              <div className="stat-thumb stat-mouse"></div>
+              <div className="mt-10 font-semibold leading-tight text-4xs">↑ 12,456</div>
+            </div>
+            <div className="stat-col ml-44">
+              <div className="stat-thumb stat-dog"></div>
+              <div className="mt-10 font-semibold leading-tight text-4xs">↓ 2,456</div>
+            </div>
+            <div className="stat-col ml-44">
+              <div className="stat-thumb stat-cat"></div>
+              <div className="mt-10 font-semibold leading-tight text-4xs">- 22,456</div>
+            </div>
+          </div>
         </div>
       </Content>
       <Footer />

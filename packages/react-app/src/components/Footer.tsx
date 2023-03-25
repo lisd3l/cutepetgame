@@ -1,9 +1,11 @@
 import React from "react";
 import { Icon } from ".";
+import PetGif from "../assets/imgs/pet.gif";
 
 export default function Footer() {
   return (
     <footer className="relative flex justify-between text-white section-footer">
+      <img src={PetGif} alt="Pet walk" className="pet-logo" />
       <div className="font-rb2-b text-6md">
         PET
         <br />

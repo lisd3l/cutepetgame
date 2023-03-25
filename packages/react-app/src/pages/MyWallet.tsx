@@ -59,7 +59,6 @@ const MyWallet = () => {
       <Content>
         <Header>
           <a href="/">Home</a>
-          <a href="/mint">Mint</a>
           <Account
             address={currentAddress}
             localProvider={localProvider}

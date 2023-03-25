@@ -22,3 +22,4 @@ export { default as TokenBalance } from "./TokenBalance";
 export { default as Wallet } from "./Wallet";
 export { default as L2Bridge } from "./L2Bridge";
 export { default as TransferCard } from "./TransferCard";
+export { default as PetCarousel } from "./PetCarousel";

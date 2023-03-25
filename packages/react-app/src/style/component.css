@@ -50,3 +50,67 @@
   backdrop-filter: blur(30px);
   border-radius: 14px;
 }
+
+.pet-carousel {
+
+  .swiper-slide {
+    width: auto;
+  }
+}
+
+.pet-slide {
+  @apply relative overflow-hidden;
+  width: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+
+  &:before {
+    content: '';
+    @apply absolute top-0 left-0 right-0;
+    padding-top: 100%;
+    background: linear-gradient(200.44deg, #126422 13.57%, #FFD541 98.38%);
+    box-shadow: 0px 10px 30px rgba(184, 51, 154, 0.3);
+    border-radius: 20px;
+    transform: matrix(1, 0.07, 0, 1, 0, 0);
+  }
+
+  .pet-container {
+    @apply p-4;
+    z-index: 1;
+    background: rgba(40, 27, 90, 0.1);
+    backdrop-filter: blur(20px);
+  }
+  
+
+  .pet-thumb {
+    @apply bg-center bg-no-repeat;
+    background-size: 100% auto; 
+    
+    &:after {
+      content: '';
+      @apply block;
+      padding-top: 100%;
+    }
+  }
+}
+
+.stat-col {
+
+  .stat-thumb {
+    width: 300px;
+    height: 300px;
+    @apply bg-cover bg-no-repeat bg-center;
+  }
+
+  .stat-mouse {
+    background-image: url('../assets/imgs/stat-mouse.png');
+  }
+
+  .stat-cat {
+    background-image: url('../assets/imgs/stat-cat.png');
+  }
+
+  .stat-dog {
+    background-image: url('../assets/imgs/stat-dog.png');
+  }
+}

@@ -33,6 +33,22 @@ footer.section-footer {
     background-clip: text;
     text-fill-color: transparent;
   }
+
+  .pet-logo {
+    @apply absolute bottom-0;
+    height: auto;
+    width: 360px;
+    animation: walktrough 9.6s steps(240, end) infinite;
+  }
+}
+ 
+@keyframes walktrough {
+  0% {
+    left: -360px;
+  }
+  100% {
+    left: calc(100% + 360px);
+  }
 }
 
 [data-anchor] {
