@@ -2,10 +2,10 @@ import { Button, Input, Tooltip } from "antd";
 import React, { useState, useEffect } from "react";
 import Blockies from "react-blockies";
 import { SendOutlined } from "@ant-design/icons";
+import { utils, ethers } from "ethers";
+
 import { Transactor } from "../helpers";
 import Wallet from "./Wallet";
-
-const { utils } = require("ethers");
 
 // improved a bit by converting address to ens if it exists
 // added option to directly input ens name
@@ -35,9 +35,16 @@ const { utils } = require("ethers");
   - Provide placeholder="Send local faucet" value for the input
 **/
 
-export default function Faucet(props) {
-  const [address, setAddress] = useState();
-  const [faucetAddress, setFaucetAddress] = useState();
+interface FaucetProps {
+  price: number;
+  localProvider: ethers.providers.JsonRpcProvider;
+  ensProvider: ethers.providers.EnsProvider;
+  placeholder?: string;
+}
+
+export default function Faucet(props: FaucetProps) {
+  const [address, setAddress] = useState("");
+  const [faucetAddress, setFaucetAddress] = useState("");
 
   const { price, placeholder, localProvider, ensProvider } = props;
 
@@ -58,7 +65,7 @@ export default function Faucet(props) {
     blockie = <div />;
   }
 
-  const updateAddress = newValue => {
+  const updateAddress = (newValue: string) => {
     if (typeof newValue !== "undefined" && utils.isAddress(newValue)) {
       setAddress(newValue);
     }

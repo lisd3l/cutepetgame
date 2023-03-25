@@ -1,0 +1,96 @@
+:root {
+  --addr-color: #9D4BD2;
+}
+
+.ant-btn {
+  backdrop-filter: blur(30px);
+}
+
+.addr-input.addr-input,
+.addr-input.ant-input-group-wrapper {
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 6px 30px rgba(69, 42, 124, 0.15);
+  backdrop-filter: blur(30px);
+  border-radius: 20px;
+  height: 50px;
+}
+
+.addr-input.ant-input-group-wrapper {
+  .ant-input-group-addon {
+    @apply px-2 border-none bg-transparent;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .ant-input-affix-wrapper {
+    @apply bg-transparent pl-1 pr-2 py-3.5;
+  }
+}
+
+.addr-input.addr-input,
+.addr-input.ant-input-group-wrapper .ant-input {
+  @apply bg-transparent text-md leading-snug;
+  color: var(--addr-color);
+
+  &::placeholder {
+    color: var(--addr-color);
+  }
+}
+
+.transfer-wrapper {
+  @apply w-40 relative;
+  border-radius: 20px;
+
+  .ant-btn-default.ant-btn {
+    @apply w-full border-none relative font-bold;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-blend-mode: soft-light;
+    color: rgba(255, 255, 255, .6);
+    backdrop-filter: none;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: rgba(255, 255, 255, .7);
+    }
+  }
+
+  &:after {
+    content: '';
+    @apply inset-0 absolute;
+    background: conic-gradient(from -86.93deg at 46.18% 51.15%, #37FFDB -67.86deg, #FF6B6B 22.24deg, #FF2FAC 165.36deg, #0085FF 220.83deg, #37FFDB 292.14deg, #FF6B6B 382.24deg);
+    mix-blend-mode: lighten;
+    filter: blur(10px);
+  }
+}
+
+.ant-pagination.wallet-pagination {
+  @apply p-2.5 text-white text-md;
+
+  .ant-pagination-prev,
+  .ant-pagination-next,
+  .ant-pagination-simple-pager input {
+    width: 60px;
+    line-height: 60px;
+    height: 50px;
+    background: #1D0D28;
+    backdrop-filter: blur(30px);
+    overflow: hidden;
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 20px;
+  }
+
+  .ant-pagination-prev,
+  .ant-pagination-simple-pager,
+  .ant-pagination-simple-pager input {
+    margin-right: 10px;
+  }
+
+  .ant-pagination-simple-pager input  {
+    @apply border-none;
+  }
+
+  .ant-pagination-item-link {
+    @apply text-white text-md h-full flex items-center justify-center hover:opacity-75;
+  }
+}

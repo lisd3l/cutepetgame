@@ -2,11 +2,6 @@ module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    fontFamily: {
-      rb2: ["Rainbow2000"],
-      "rb2-b": ["Rainbow2000Bold"],
-      "rb2-i": ["Rainbow2000Italic"],
-    },
     fontSize: {
       xs: "12px",
       md: "16px",
@@ -19,11 +14,26 @@ module.exports = {
       "4md": "64px",
       "6md": ["96px", "97px"],
     },
-    colors: {
-      white: "#ffffff",
-      ptext: "var(--primary-text-color)",
-      theme: "var(--theme-color)",
-      theme2: "var(--theme-color-2)",
+    extend: {
+      fontFamily: {
+        rb2: ["Rainbow2000"],
+        "rb2-b": ["Rainbow2000Bold"],
+        "rb2-i": ["Rainbow2000Italic"],
+      },
+      colors: {
+        ptext: "var(--primary-text-color)",
+        theme: "var(--theme-color)",
+        theme2: "var(--theme-color-2)",
+      },
+      spacing: {
+        "68px": "68px",
+        "120px": "120px",
+      },
+      textColor: {
+        pred: "#FF3E3E",
+        pgreen: "#63AC44",
+        white70: "rgba(255, 255, 255, 0.7)",
+      },
     },
   },
   variants: {

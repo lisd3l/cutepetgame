@@ -4,6 +4,7 @@ import { Routes } from "./routes";
 import { IconSprite } from "./components";
 
 import "./App.css";
+import "./style/less/index.less";
 
 export default function App() {
   return (

@@ -1,7 +1,7 @@
 import { Input } from "antd";
 import React, { useEffect, useState } from "react";
 
-const { utils, constants } = require("ethers");
+import { utils, constants } from "ethers";
 
 /*
   ~ What it does? ~
@@ -27,15 +27,22 @@ const { utils, constants } = require("ethers");
 
 */
 
-export default function BytesStringInput(props) {
+interface BytesStringInputProps {
+  value?: string;
+  placeholder?: string;
+  autoFocus?: boolean;
+  onChange?: (value: string) => void;
+}
+
+export default function BytesStringInput(props: BytesStringInputProps) {
   const [mode, setMode] = useState("STRING");
-  const [display, setDisplay] = useState();
+  const [display, setDisplay] = useState("");
   const [value, setValue] = useState(constants.HashZero);
 
   // current value is the value in bytes32
   const currentValue = typeof props.value !== "undefined" ? props.value : value;
 
-  const option = title => {
+  const option = (title: string) => {
     return (
       <div
         style={{ cursor: "pointer" }}

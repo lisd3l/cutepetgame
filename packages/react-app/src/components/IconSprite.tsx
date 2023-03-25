@@ -13,14 +13,15 @@ export default function IconSprite() {
       style={{ display: "none" }}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-    >{IconKeys.map(key =>
+    >
+      {IconKeys.map(key => (
         <symbol
           key={key}
           id={`icon-${key}`}
           viewBox="0 0 24 24"
-          dangerouslySetInnerHTML={{ __html: IconsMap[key] }}
+          dangerouslySetInnerHTML={{ __html: (IconsMap as any)[key] }}
         />
-      )
-    }</svg>
+      ))}
+    </svg>
   );
 }

@@ -1,0 +1,52 @@
+.p-title {
+  @apply font-rb2-b text-4md inline-block;
+  
+  background: linear-gradient(90deg, #FFFCFF 19.79%, #B0D566 77.6%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+
+  &.theme2 {
+    background: linear-gradient(90deg, #FFFCFF 19.79%, #C61FCB 77.6%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+}
+
+.pet-card {
+  background-color: rgba(198, 31, 203, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+}
+
+.icon-pet {
+  width: 80px;
+  height: 62px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: left 0;
+
+  &-cat {
+    background-image: url('../assets/imgs/icon-cat.png') at-2x;
+  }
+
+  &-dog {
+    background-image: url('../assets/imgs/icon-dog.png') at-2x;
+  }
+
+  &-mouse {
+    background-image: url('../assets/imgs/icon-mouse.png') at-2x;
+  }
+}
+
+.qrcode-btn {
+  background: rgba(0, 0, 0, 0.3);
+  background-blend-mode: overlay;
+  box-shadow: 0px 30px 30px rgba(69, 42, 124, 0.15);
+  backdrop-filter: blur(30px);
+  border-radius: 14px;
+}

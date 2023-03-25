@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { RetweetOutlined, SettingOutlined } from "@ant-design/icons";
 import { ChainId, Fetcher, Percent, Token, TokenAmount, Trade, WETH } from "@uniswap/sdk";
 import { abi as IUniswapV2Router02ABI } from "@uniswap/v2-periphery/build/IUniswapV2Router02.json";
@@ -34,7 +35,7 @@ const erc20Abi = [
   "function allowance(address _owner, address _spender) public view returns (uint256 remaining)",
 ];
 
-const makeCall = async (callName, contract, args, metadata = {}) => {
+const makeCall = async (callName: string, contract: ethers.Contract, args: any[], metadata = {}) => {
   if (contract[callName]) {
     let result;
     if (args) {
@@ -44,22 +45,22 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
     }
     return result;
   }
-  return undefined;
   console.log("no call of that name!");
+  return undefined;
 };
 
 const defaultToken = "ETH";
 const defaultTokenOut = "DAI";
-const defaultSlippage = "0.5";
+const defaultSlippage = 0.5;
 const defaultTimeLimit = 60 * 10;
 
-const tokenListToObject = array =>
+const tokenListToObject = (array: any[]) =>
   array.reduce((obj, item) => {
     obj[item.symbol] = new Token(item.chainId, item.address, item.decimals, item.symbol, item.name);
     return obj;
   }, {});
 
-function Swap({ selectedProvider, tokenListURI }) {
+function Swap({ selectedProvider, tokenListURI }: any) {
   const [tokenIn, setTokenIn] = useState(defaultToken);
   const [tokenOut, setTokenOut] = useState(defaultTokenOut);
   const [exact, setExact] = useState();
@@ -104,7 +105,7 @@ function Swap({ selectedProvider, tokenListURI }) {
       try {
         const tokenListResponse = await fetch(_tokenListUri);
         const tokenListJson = await tokenListResponse.json();
-        const filteredTokens = tokenListJson.tokens.filter(function (t) {
+        const filteredTokens = tokenListJson.tokens.filter(function (t: { chainId: ChainId }) {
           return t.chainId === activeChainId;
         });
         const ethToken = WETH[activeChainId];
@@ -125,7 +126,7 @@ function Swap({ selectedProvider, tokenListURI }) {
 
   const getTrades = async () => {
     if (tokenIn && tokenOut && (amountIn || amountOut)) {
-      const pairs = arr => arr.map((v, i) => arr.slice(i + 1).map(w => [v, w])).flat();
+      const pairs = (arr: any[]) => arr.map((v: any, i: number) => arr.slice(i + 1).map((w: any) => [v, w])).flat();
 
       const baseTokens = tokenList
         .filter(function (t) {
@@ -137,9 +138,9 @@ function Swap({ selectedProvider, tokenListURI }) {
 
       const listOfPairwiseTokens = pairs(baseTokens);
 
-      const getPairs = async list => {
-        const listOfPromises = list.map(item => Fetcher.fetchPairData(item[0], item[1], selectedProvider));
-        return Promise.all(listOfPromises.map(p => p.catch(() => undefined)));
+      const getPairs = async (list: any[]) => {
+        const listOfPromises = list.map((item: Token[]) => Fetcher.fetchPairData(item[0], item[1], selectedProvider));
+        return Promise.all(listOfPromises.map((p: Promise<any>) => p.catch(() => undefined)));
       };
 
       const listOfPairs = await getPairs(listOfPairwiseTokens);
@@ -182,6 +183,7 @@ function Swap({ selectedProvider, tokenListURI }) {
 
   useEffect(() => {
     getTrades();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenIn, tokenOut, debouncedAmountIn, debouncedAmountOut, slippageTolerance, selectedProvider]);
 
   useEffect(() => {
@@ -192,9 +194,10 @@ function Swap({ selectedProvider, tokenListURI }) {
         setAmountInMax(trades[0].maximumAmountIn(slippageTolerance));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slippageTolerance, amountIn, amountOut, trades]);
 
-  const getBalance = async (_token, _account, _contract) => {
+  const getBalance = async (_token: string, _account: any, _contract: ethers.Contract) => {
     let newBalance;
     if (_token === "ETH") {
       newBalance = await selectedProvider.getBalance(_account);
@@ -235,13 +238,13 @@ function Swap({ selectedProvider, tokenListURI }) {
 
   const route = trades
     ? trades.length > 0
-      ? trades[0].route.path.map(function (item) {
+      ? trades[0].route.path.map(function (item: { symbol: any }) {
           return item.symbol;
         })
       : []
     : [];
 
-  const updateRouterAllowance = async newAllowance => {
+  const updateRouterAllowance = async (newAllowance: string) => {
     setApproving(true);
     try {
       const tempContract = new ethers.Contract(tokens[tokenIn].address, erc20Abi, signer);
@@ -292,7 +295,7 @@ function Swap({ selectedProvider, tokenListURI }) {
 
       let call;
       const deadline = Math.floor(Date.now() / 1000) + timeLimit;
-      const path = trades[0].route.path.map(function (item) {
+      const path = trades[0].route.path.map(function (item: { address: any }) {
         return item.address;
       });
       console.log(path);
@@ -389,7 +392,7 @@ function Swap({ selectedProvider, tokenListURI }) {
         })[0]
       : null;
 
-  const cleanIpfsURI = uri => {
+  const cleanIpfsURI = (uri: string) => {
     try {
       return uri.replace("ipfs://", "https://ipfs.io/ipfs/");
     } catch (e) {

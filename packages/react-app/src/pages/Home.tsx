@@ -1,17 +1,25 @@
 import React from "react";
-import { Footer, Content, HomeHeader } from "../components";
+import { Footer, Content, Header } from "../components";
 import BannerBg from "../assets/imgs/banner.png";
 
 export default function Home() {
   return (
     <div className="page page-home">
       <Content>
-        <HomeHeader />
+        <Header>
+          <a href="#rules">Rules</a>
+          <a href="#bouns">Bouns</a>
+          <a href="#fairness">Fairness</a>
+          <a href="#community">community</a>
+          <a href="#roadmap">RoadMap</a>
+          <a href="/wallet">MYWallet</a>
+          <a href="/mint">Mint</a>
+        </Header>
         <div className="relative home-banner">
           <img src={BannerBg} alt="" className="w-full align-center" />
         </div>
         <div className="relative overflow-hidden text-xs text-center px-36 home-section-intro bg-theme2">
-          <div className="p-title section-gap1">Game Rules (Phase 1)</div>
+          <div className="p-title mb-68px">Pet Battle</div>
           <div className="mx-auto leading-tight tracking-wide text-3xs content">
             We started an initiative to support pets that are left unsold and are facing problems. As part of this
             effort, we are developing a pet-themed game to raise awareness about the issue of unsold pets and encourage
@@ -19,8 +27,10 @@ export default function Home() {
           </div>
         </div>
         <div className="relative pt-16 overflow-hidden text-xs pb-15 px-36 bg-theme2">
-          <div className="section-gap2">
-            <div className="p-title section-gap1">Game Rules (Phase 1)</div>
+          <div className="mb-120px">
+            <div className="p-title mb-68px" id="rules" data-anchor="rules">
+              Game Rules (Phase 1)
+            </div>
             <ul className="leading-tight tracking-wide list-disc text-3xs">
               <li>Users choose the type of animal they want.</li>
               <li>Every day at a designated time on the blockchain, the number of each animal type is tallied.</li>
@@ -29,19 +39,35 @@ export default function Home() {
               <li>At the initial stage, even the loser can earn a few battle points.</li>
             </ul>
           </div>
-          <div className="section-gap2">
-            <div className="p-title section-gap1">Bonus</div>
+          <div className="mb-120px">
+            <div className="p-title mb-68px" id="bouns" data-anchor="bouns">
+              Bonus
+            </div>
             <div className="leading-tight tracking-wide text-3xs">Users who invite others can receive NFT bonuses.</div>
           </div>
-          <div className="section-gap2">
-            <div className="p-title section-gap1">Community Governance</div>
+          <div className="mb-120px">
+            <div className="p-title mb-68px" id="fairness" data-anchor="fairness">
+              Fairness
+            </div>
+            <div className="leading-tight tracking-wide text-3xs">
+              To maintain fairness, this game can increase uncertainty in the results. <br />
+              Anyone can win because they can switch characters even at the last minute. <br />
+              In addition, all processing, such as verification and statistics, is implemented in smart contracts.
+            </div>
+          </div>
+          <div className="mb-120px">
+            <div className="p-title mb-68px" id="community" data-anchor="community">
+              Community Governance
+            </div>
             <div className="leading-tight tracking-wide text-3xs">
               We plan to collaborate with the Japan Pet Protection Association. We will form a Pet Protection <br />
               Association DAO to decide on the use and distribution of profits. To maintain fairness, this game can
             </div>
           </div>
-          <div className="section-gap2">
-            <div className="p-title section-gap1">Roadmap</div>
+          <div className="mb-120px">
+            <div className="p-title mb-68px" id="roadmap" data-anchor="roadmap">
+              Roadmap
+            </div>
             <div className="font-bold text-2lg mb-7">2023.4 (Phase 1)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs">
               Winners will receive battle points at the beta version launch, and even the loser will receive a small
@@ -63,10 +89,10 @@ export default function Home() {
           </div>
         </div>
         <div className="relative pt-16 overflow-hidden text-xs pb-44 px-36 bg-theme2">
-          <div className="p-title section-gap1">Recently Pet</div>
+          <div className="p-title mb-68px">Recently Pet</div>
         </div>
-        <div className="relative overflow-hidden text-xs text-center pt-52 section-pb2 px-36 bg-theme2 home-section-assets">
-          <div className="p-title section-gap2">Assets held for pet</div>
+        <div className="relative overflow-hidden text-xs text-center pt-52 pb-120px px-36 bg-theme2 home-section-assets">
+          <div className="p-title mb-120px">Assets held for pet</div>
         </div>
       </Content>
       <Footer />

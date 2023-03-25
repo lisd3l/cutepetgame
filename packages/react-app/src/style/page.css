@@ -7,7 +7,7 @@
   background-color: var(--theme-color-2);
 }
 
-.page-mint {
+.page-wallet {
   background-color: var(--theme-color);
 }
 
@@ -35,9 +35,13 @@ footer.section-footer {
   }
 }
 
+[data-anchor] {
+  scroll-margin-top: 240px;
+}
+
 header {
   @apply fixed inset-x-0 z-10;
-  top: 85px;
+  top: var(--header-topoffset);
 
   .header {
     background: rgba(37, 31, 65, 0.2);
@@ -47,7 +51,7 @@ header {
     @apply mx-auto flex items-center justify-end;
     max-width: 1632px;
     width: 85vw;
-    height: 90px;
+    height: var(--header-height);
     border-radius: 40px;
     padding: 0 3.676%;
 
@@ -64,11 +68,16 @@ header {
     nav {
       @apply font-rb2 text-3xs text-white;
 
-      a {
+      a,
+      button {
         @apply ml-10;
       }
     }
   }
+}
+
+.header-offset {
+  padding-top: calc(var(--header-topoffset) + var(--header-height));
 }
 
 .home-banner {
@@ -107,16 +116,4 @@ header {
 
 .home-section-assets {
   background: url(../assets/imgs/section-line.png) top center / 100% auto no-repeat;
-}
-
-.section-gap1 {
-  margin-bottom: 68px;
-}
-
-.section-gap2 {
-  margin-bottom: 120px;
-}
-
-.section-pb2 {
-  margin-bottom: 120px;
 }

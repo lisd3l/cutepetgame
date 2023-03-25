@@ -1,4 +1,4 @@
-export { default as HomeHeader } from "./HomeHeader";
+export { default as Header } from "./Header";
 export { default as Content } from "./Content";
 export { default as Footer } from "./Footer";
 export { default as Icon } from "./Icon";
@@ -21,4 +21,4 @@ export { default as Timeline } from "./Timeline";
 export { default as TokenBalance } from "./TokenBalance";
 export { default as Wallet } from "./Wallet";
 export { default as L2Bridge } from "./L2Bridge";
-export { default as WalletView } from "./WalletView";
+export { default as TransferCard } from "./TransferCard";

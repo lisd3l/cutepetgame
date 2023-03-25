@@ -1,15 +1,23 @@
-import { Badge, Button } from "antd";
+import { Badge, BadgeProps, Button } from "antd";
 import { useBlockNumber, usePoller } from "eth-hooks";
 import React, { useState } from "react";
 // import { WalletOutlined } from '@ant-design/icons';
 import Address from "./Address";
+import type { TEthersProvider } from "eth-hooks/models/providerTypes";
+import type { Network } from "@ethersproject/networks";
+import type { Signer } from "ethers";
 
-export default function Provider(props) {
+interface ProviderProps {
+  provider: TEthersProvider;
+  name: string;
+}
+
+export default function Provider(props: ProviderProps) {
   const [showMore, setShowMore] = useState(false);
-  const [status, setStatus] = useState("processing");
-  const [network, setNetwork] = useState();
-  const [signer, setSigner] = useState();
-  const [address, setAddress] = useState();
+  const [status, setStatus] = useState<BadgeProps["status"]>("processing");
+  const [network, setNetwork] = useState<Network>();
+  const [signer, setSigner] = useState<Signer>();
+  const [address, setAddress] = useState("");
 
   const blockNumber = useBlockNumber(props.provider);
 
@@ -56,7 +64,7 @@ export default function Provider(props) {
     );
   }
 
-  let showExtra = "";
+  let showExtra = <></>;
   if (showMore) {
     showExtra = (
       <span>
@@ -72,7 +80,7 @@ export default function Provider(props) {
     );
   }
 
-  let showWallet = "";
+  let showWallet = <></>;
   if (typeof signer !== "undefined" && address) {
     showWallet = (
       <span>

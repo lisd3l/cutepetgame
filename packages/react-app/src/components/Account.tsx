@@ -1,8 +1,11 @@
-import { Button } from "antd";
 import React from "react";
-import Address from "./Address";
-import Balance from "./Balance";
-import Wallet from "./Wallet";
+
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+
+// import Address from "./Address";
+// import Balance from "./Balance";
+// import Wallet from "./Wallet";
 
 /*
   ~ What it does? ~
@@ -38,8 +41,20 @@ import Wallet from "./Wallet";
               (ex. by default "https://etherscan.io/" or for xdai "https://blockscout.com/poa/xdai/")
 */
 
-// @ts-ignore
-export default function Account({
+interface AccountProps {
+  address: string;
+  userSigner: ethers.Signer | undefined;
+  localProvider: ethers.providers.StaticJsonRpcProvider;
+  mainnetProvider: ethers.providers.StaticJsonRpcProvider;
+  price: number;
+  minimized?: boolean;
+  web3Modal?: Web3Modal;
+  loadWeb3Modal: () => Promise<void>;
+  logoutOfWeb3Modal: () => Promise<void>;
+  blockExplorer: string;
+}
+
+const Account: React.FC<AccountProps> = ({
   address,
   userSigner,
   localProvider,
@@ -50,61 +65,32 @@ export default function Account({
   loadWeb3Modal,
   logoutOfWeb3Modal,
   blockExplorer,
-}) {
-  const modalButtons = [];
-  if (web3Modal) {
-    if (web3Modal.cachedProvider) {
-      modalButtons.push(
-        <Button
-          key="logoutbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
-          shape="round"
-          size="large"
-          onClick={logoutOfWeb3Modal}
-        >
-          logout
-        </Button>,
-      );
-    } else {
-      modalButtons.push(
-        <Button
-          key="loginbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
-          shape="round"
-          size="large"
-          /* type={minimized ? "default" : "primary"}     too many people just defaulting to MM and having a bad time */
-          onClick={loadWeb3Modal}
-        >
-          connect
-        </Button>,
-      );
-    }
-  }
+}) => {
+  // const display = minimized ? (
+  //   ""
+  // ) : (
+  //   <span>
+  //     {address ? (
+  //       <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
+  //     ) : (
+  //       "Connecting..."
+  //     )}
+  //     <Balance address={address} provider={localProvider} price={price} />
+  //     <Wallet
+  //       address={address}
+  //       provider={localProvider}
+  //       signer={userSigner}
+  //       ensProvider={mainnetProvider}
+  //       price={price}
+  //     />
+  //   </span>
+  // );
 
-  const display = minimized ? (
-    ""
+  return web3Modal?.cachedProvider ? (
+    <button onClick={logoutOfWeb3Modal}>LOGOUT</button>
   ) : (
-    <span>
-      {address ? (
-        <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
-      ) : (
-        "Connecting..."
-      )}
-      <Balance address={address} provider={localProvider} price={price} />
-      <Wallet
-        address={address}
-        provider={localProvider}
-        signer={userSigner}
-        ensProvider={mainnetProvider}
-        price={price}
-      />
-    </span>
+    <button onClick={loadWeb3Modal}>CONNECT</button>
   );
+};
 
-  return (
-    <div>
-      {display}
-      {modalButtons}
-    </div>
-  );
-}
+export default Account;

@@ -1,10 +1,11 @@
-import { CameraOutlined, QrcodeOutlined } from "@ant-design/icons";
-import { Badge, Input } from "antd";
-import { useLookupAddress } from "eth-hooks/dapps/ens";
-import React, { useCallback, useState } from "react";
-import QrReader from "react-qr-reader";
 import Blockie from "./Blockie";
+import QrReader from "react-qr-reader";
+import React, { useCallback, useState } from "react";
+import { Input, Modal } from "antd";
+import { QrcodeOutlined } from "@ant-design/icons";
 import { ethers } from "ethers";
+import { useLookupAddress } from "eth-hooks/dapps/ens";
+import type { TEthersProvider } from "eth-hooks/models/providerTypes";
 
 // probably we need to change value={toAddress} to address={toAddress}
 
@@ -30,13 +31,19 @@ import { ethers } from "ethers";
 
 const isENS = (address = "") => address.endsWith(".eth") || address.endsWith(".xyz");
 
-export default function AddressInput(props) {
-  const { ensProvider, onChange } = props;
-  const [value, setValue] = useState(props.value);
+export interface AddressInputProps {
+  value: string;
+  ensProvider: TEthersProvider;
+  placeholder?: string;
+  autoFocus?: boolean;
+  onChange: (value: string) => void;
+}
+
+const AddressInput: React.FC<AddressInputProps & { className?: string }> = props => {
+  const { ensProvider, onChange, value } = props;
   const [scan, setScan] = useState(false);
 
-  const currentValue = typeof props.value !== "undefined" ? props.value : value;
-  const ens = useLookupAddress(props.ensProvider, currentValue);
+  const ens = useLookupAddress(props.ensProvider, value);
 
   const updateAddress = useCallback(
     async newValue => {
@@ -51,74 +58,63 @@ export default function AddressInput(props) {
             // eslint-disable-next-line no-empty
           } catch (e) {}
         }
-        setValue(address);
-        if (typeof onChange === "function") {
-          onChange(address);
-        }
+        onChange(address);
       }
     },
     [ensProvider, onChange],
   );
 
   return (
-    <div>
-      {scan ? (
-        <div
-          style={{
-            zIndex: 256,
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-          }}
-          onClick={() => {
+    <div className={props.className}>
+      <Modal
+        title="QR Reader"
+        visible={scan}
+        footer={null}
+        keyboard
+        maskClosable
+        onCancel={() => setScan(false)}
+        destroyOnClose
+      >
+        <QrReader
+          delay={250}
+          resolution={1200}
+          onError={e => {
+            console.log("SCAN ERROR", e);
             setScan(false);
           }}
-        >
-          <QrReader
-            delay={250}
-            resolution={1200}
-            onError={e => {
-              console.log("SCAN ERROR", e);
-              setScan(false);
-            }}
-            onScan={newValue => {
-              if (newValue) {
-                console.log("SCAN VALUE", newValue);
-                let possibleNewValue = newValue;
-                if (possibleNewValue.indexOf("/") >= 0) {
-                  possibleNewValue = possibleNewValue.substr(possibleNewValue.lastIndexOf("0x"));
-                  console.log("CLEANED VALUE", possibleNewValue);
-                }
-                setScan(false);
-                updateAddress(possibleNewValue);
+          onScan={newValue => {
+            if (newValue) {
+              console.log("SCAN VALUE", newValue);
+              let possibleNewValue = newValue;
+              if (possibleNewValue.indexOf("/") >= 0) {
+                possibleNewValue = possibleNewValue.substr(possibleNewValue.lastIndexOf("0x"));
+                console.log("CLEANED VALUE", possibleNewValue);
               }
-            }}
-            style={{ width: "100%" }}
-          />
-        </div>
-      ) : (
-        ""
-      )}
+              setScan(false);
+              updateAddress(possibleNewValue);
+            }
+          }}
+          className="w-full"
+        />
+      </Modal>
       <Input
         id="0xAddress" // name it something other than address for auto fill doxxing
         name="0xAddress" // name it something other than address for auto fill doxxing
         autoComplete="off"
+        className="addr-input"
         autoFocus={props.autoFocus}
         placeholder={props.placeholder ? props.placeholder : "address"}
-        prefix={<Blockie address={currentValue} size={8} scale={3} />}
-        value={ethers.utils.isAddress(currentValue) && !isENS(currentValue) && isENS(ens) ? ens : currentValue}
-        addonAfter={
+        prefix={<Blockie seed={value} size={8} scale={3} />}
+        bordered={false}
+        value={ethers.utils.isAddress(value) && !isENS(value) && isENS(ens) ? ens : value}
+        addonBefore={
           <div
-            style={{ marginTop: 4, cursor: "pointer" }}
+            className="flex items-center justify-center cursor-pointer w-9 h-9 qrcode-btn hover:opacity-75"
             onClick={() => {
               setScan(!scan);
             }}
           >
-            <Badge count={<CameraOutlined style={{ fontSize: 9 }} />}>
-              <QrcodeOutlined style={{ fontSize: 18 }} />
-            </Badge>{" "}
-            Scan
+            <QrcodeOutlined style={{ fontSize: 20, color: "var(--addr-color)" }} />
           </div>
         }
         onChange={e => {
@@ -127,4 +123,6 @@ export default function AddressInput(props) {
       />
     </div>
   );
-}
+};
+
+export default AddressInput;

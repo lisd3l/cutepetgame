@@ -28,15 +28,24 @@ import React, { useEffect, useState } from "react";
   - Control input change by onChange={value => { setAmount(value);}}
 */
 
-export default function EtherInput(props) {
+interface EtherInputProps {
+  value?: string;
+  placeholder?: string;
+  autoFocus?: boolean;
+  onChange?: (value: string) => void;
+  price?: number;
+}
+
+export default function EtherInput(props: EtherInputProps) {
   const [mode, setMode] = useState(props.price ? "USD" : "ETH");
-  const [display, setDisplay] = useState();
-  const [value, setValue] = useState();
+  const [display, setDisplay] = useState("");
+  const [value, setValue] = useState("");
 
   const currentValue = typeof props.value !== "undefined" ? props.value : value;
 
-  const option = title => {
-    if (!props.price) return "";
+  const option = (title: string) => {
+    const price = props.price;
+    if (!price) return "";
     return (
       <div
         style={{ cursor: "pointer" }}
@@ -47,7 +56,7 @@ export default function EtherInput(props) {
           } else {
             setMode("USD");
             if (currentValue) {
-              const usdValue = "" + (parseFloat(currentValue) * props.price).toFixed(2);
+              const usdValue = "" + (parseFloat(currentValue) * price).toFixed(2);
               setDisplay(usdValue);
             } else {
               setDisplay(currentValue);
@@ -88,7 +97,7 @@ export default function EtherInput(props) {
         if (mode === "USD") {
           const possibleNewValue = parseFloat(newValue);
           if (possibleNewValue) {
-            const ethValue = possibleNewValue / props.price;
+            const ethValue = String(possibleNewValue / (props.price || 1));
             setValue(ethValue);
             if (typeof props.onChange === "function") {
               props.onChange(ethValue);

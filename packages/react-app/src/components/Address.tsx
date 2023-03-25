@@ -1,7 +1,8 @@
-import { Skeleton, Typography } from "antd";
+import { Typography } from "antd";
 import React from "react";
 import Blockies from "react-blockies";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
+import type { TEthersProvider } from "eth-hooks/models/providerTypes";
 
 // changed value={address} to address={address}
 
@@ -30,20 +31,27 @@ import { useLookupAddress } from "eth-hooks/dapps/ens";
 
 const { Text } = Typography;
 
-const blockExplorerLink = (address, blockExplorer) =>
+const blockExplorerLink = (address: string, blockExplorer: string) =>
   `${blockExplorer || "https://etherscan.io/"}${"address/"}${address}`;
 
-export default function Address(props) {
+interface AddressProps {
+  address: string;
+  value?: string;
+  ensProvider?: TEthersProvider;
+  size?: "short" | "long";
+  blockExplorer?: string;
+  minimized?: boolean;
+  onChange?: (value: string) => void;
+  fontSize?: number;
+}
+
+export default function Address(props: AddressProps) {
   const address = props.value || props.address;
 
   const ens = useLookupAddress(props.ensProvider, address);
 
   if (!address) {
-    return (
-      <span>
-        <Skeleton avatar paragraph={{ rows: 1 }} />
-      </span>
-    );
+    return <span></span>;
   }
 
   let displayAddress = address.substr(0, 6);
@@ -56,7 +64,7 @@ export default function Address(props) {
     displayAddress = address;
   }
 
-  const etherscanLink = blockExplorerLink(address, props.blockExplorer);
+  const etherscanLink = blockExplorerLink(address, props.blockExplorer || "");
   if (props.minimized) {
     return (
       <span style={{ verticalAlign: "middle" }}>

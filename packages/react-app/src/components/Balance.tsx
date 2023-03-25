@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useBalance } from "eth-hooks";
+import { BigNumber, utils } from "ethers";
 
-const { utils } = require("ethers");
+import type { Provider } from "@ethersproject/providers";
 
 /*
   ~ What it does? ~
@@ -29,7 +30,17 @@ const { utils } = require("ethers");
   - Provide price={price} of ether and get your balance converted to dollars
 */
 
-export default function Balance(props) {
+interface BalanceProps {
+  provider?: Provider;
+  address: string;
+  balance?: BigNumber;
+  value?: BigNumber;
+  price?: number;
+  dollarMultiplier?: number;
+  size?: number;
+}
+
+export default function Balance(props: BalanceProps) {
   const [dollarMode, setDollarMode] = useState(true);
 
   // const [listening, setListening] = useState(false);

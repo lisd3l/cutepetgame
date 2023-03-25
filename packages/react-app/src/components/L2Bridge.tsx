@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useContractLoader, useOnBlock } from "eth-hooks";
 import { NETWORKS } from "../constants";
 import { Transactor } from "../helpers";
+import type { TExternalContracts } from "eth-hooks/models/contractTypes";
 
 /*
 This is a component for bridging between L1 & L2
@@ -19,15 +20,20 @@ Currently it supports Testnet deposits for Arbitrum & Optimism
 
 */
 
-export default function L2ArbitrumBridge({ address, userSigner }) {
+interface L2ArbitrumBridgeProps {
+  address: string;
+  userSigner: ethers.Signer;
+}
+
+export default function L2ArbitrumBridge({ address, userSigner }: L2ArbitrumBridgeProps) {
   const [L1EthBalance, setL1EthBalance] = useState("...");
   const [L2EthBalance, setL2EthBalance] = useState("...");
-  const [L1Provider, setL1Provider] = useState("");
-  const [L2Provider, setL2Provider] = useState("");
+  const [L1Provider, setL1Provider] = useState<ethers.providers.JsonRpcProvider>();
+  const [L2Provider, setL2Provider] = useState<ethers.providers.JsonRpcProvider>();
   const [rollup, setRollup] = useState("arbitrum");
-  const [environment, setEnvironment] = useState("test");
+  const [environment] = useState("test");
 
-  const rollupConfig = {
+  const rollupConfig: any = {
     arbitrum: {
       test: { L1: NETWORKS.rinkeby, L2: NETWORKS.rinkebyArbitrum },
       main: { L1: NETWORKS.mainnet, L2: NETWORKS.arbitrum },
@@ -41,8 +47,7 @@ export default function L2ArbitrumBridge({ address, userSigner }) {
 
   const activeConfig = rollupConfig[rollup][environment];
 
-  const selectedChainId =
-    userSigner && userSigner.provider && userSigner.provider._network && userSigner.provider._network.chainId;
+  const selectedChainId = (userSigner?.provider as any)?._network?.chainId;
 
   const tx = Transactor(userSigner);
 
@@ -56,15 +61,19 @@ export default function L2ArbitrumBridge({ address, userSigner }) {
       setL2EthBalance("...");
     }
     setProviders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rollup]);
 
-  const contracts = useContractLoader(userSigner, { externalContracts: L1BridgeMetadata, hardhatContracts: {} });
+  const contracts = useContractLoader(userSigner, {
+    externalContracts: L1BridgeMetadata as unknown as TExternalContracts,
+    // hardhatContracts: {},
+  });
 
   useOnBlock(L1Provider, async () => {
-    console.log(`⛓ A new mainnet block is here: ${L1Provider._lastBlockNumber}`);
-    const yourL1Balance = await L1Provider.getBalance(address);
+    console.log(`⛓ A new mainnet block is here: ${L1Provider?._lastBlockNumber}`);
+    const yourL1Balance = await L1Provider?.getBalance(address);
     setL1EthBalance(yourL1Balance ? ethers.utils.formatEther(yourL1Balance) : "...");
-    const yourL2Balance = await L2Provider.getBalance(address);
+    const yourL2Balance = await L2Provider?.getBalance(address);
     setL2EthBalance(yourL2Balance ? ethers.utils.formatEther(yourL2Balance) : "...");
   });
 
@@ -124,25 +133,25 @@ export default function L2ArbitrumBridge({ address, userSigner }) {
 
   const [form] = Form.useForm();
 
-  const onAssetChange = value => {
+  const onAssetChange = (value: string) => {
     console.log(value);
   };
 
-  async function onFinish(values) {
+  async function onFinish(values: any) {
     console.log(contracts);
     console.log(values.amount.toString());
     console.log(rollup);
     let newTx;
     try {
       if (rollup === "arbitrum") {
-        newTx = await tx(
+        newTx = await tx?.(
           contracts.Inbox.depositEth(1_300_000, {
             value: utils.parseEther(values.amount.toString()),
             gasLimit: 300000,
           }),
         );
       } else if (rollup === "optimism") {
-        newTx = await tx(
+        newTx = await tx?.(
           contracts.OVM_L1StandardBridge.depositETH(1_300_000, "0x", {
             value: utils.parseEther(values.amount.toString()),
           }),
@@ -156,9 +165,9 @@ export default function L2ArbitrumBridge({ address, userSigner }) {
     }
   }
 
-  const onReset = () => {
-    form.resetFields();
-  };
+  // const onReset = () => {
+  //   form.resetFields();
+  // };
 
   const wrongNetwork = selectedChainId !== activeConfig.L1.chainId;
 

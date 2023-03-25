@@ -2,7 +2,7 @@ import { Col, Divider, Row } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import tryToDisplay from "./utils";
 
-const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, triggerRefresh }) => {
+const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, triggerRefresh }: any) => {
   const [variable, setVariable] = useState("");
 
   const refresh = useCallback(async () => {
@@ -38,9 +38,7 @@ const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, trig
         </Col>
         <Col span={2}>
           <h2>
-            <a href="#" onClick={refresh}>
-              🔄
-            </a>
+            <button onClick={refresh}>🔄</button>
           </h2>
         </Col>
       </Row>

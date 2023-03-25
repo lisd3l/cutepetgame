@@ -24,6 +24,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.8",
+    "@types/react": "17.0.39",
     "@types/react-router-dom": "^5.3.3",
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -37,6 +38,7 @@
     "autoprefixer": "9.8.6",
     "axios": "^0.20.0",
     "bnc-notify": "^1.5.0",
+    "craco-less": "^2.0.0",
     "dotenv": "^8.2.0",
     "eth-hooks": "2.3.14",
     "ethers": "^5.4.1",
@@ -65,8 +67,11 @@
     "@apollo/client": "^3.3.21",
     "@testing-library/dom": "^6.12.2",
     "@types/node": "^18.15.3",
-    "@types/react": "^17.0.2",
+    "@types/qrcode.react": "^1.0.2",
+    "@types/react": "17.0.39",
+    "@types/react-blockies": "^1.4.1",
     "@types/react-dom": "^17.0.2",
+    "@types/react-qr-reader": "^2.1.4",
     "chalk": "^4.1.0",
     "eslint": "^7.5.0",
     "eslint-config-airbnb": "^18.2.0",
@@ -85,12 +90,17 @@
     "ipfs-http-client": "^45.0.0",
     "less-plugin-npm-import": "^2.1.0",
     "prettier": "^2.0.5",
+    "process": "^0.11.10",
+    "react-error-overlay": "6.0.9",
     "s3-folder-upload": "^2.3.1",
     "surge": "^0.21.5",
     "typescript": "^4.0.5"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "scripts": {
     "build": "env DISABLE_NEW_JSX_TRANSFORM=true craco --openssl-legacy-provider build",

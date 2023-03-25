@@ -19,7 +19,11 @@ import React from "react";
   - Provide gasPrice={gasPrice} and get current gas gauge
 */
 
-export default function GasGauge(props) {
+interface GasGaugeProps {
+  gasPrice?: string;
+}
+
+export default function GasGauge(props: GasGaugeProps) {
   return (
     <Button
       onClick={() => {
