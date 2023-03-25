@@ -81,16 +81,38 @@
   }
 
   .ant-pagination-prev,
-  .ant-pagination-simple-pager,
   .ant-pagination-simple-pager input {
     margin-right: 10px;
+  }
+
+  .ant-pagination-simple-pager {
+    margin-right: 15px;
   }
 
   .ant-pagination-simple-pager input  {
     @apply border-none;
   }
 
+  ..ant-pagination-slash {
+    margin: 0 15px 0 5px;
+  }
+
   .ant-pagination-item-link {
     @apply text-white text-md h-full flex items-center justify-center hover:opacity-75;
+  }
+}
+
+.addr-antd-text.ant-typography {
+  color: inherit;
+
+  a,
+  .ant-typography-expand,
+  .ant-typography-edit,
+  .ant-typography-copy {
+    color: inherit;
+
+    &:hover {
+      opacity: .75;
+    }
   }
 }

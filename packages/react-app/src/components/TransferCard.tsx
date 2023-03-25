@@ -12,18 +12,27 @@ interface TransforCardProps {
   blockExplorer?: string;
   address: string;
   onChange: (value: string) => void;
-  onTransfer: (toAddress: string, id: string) => void;
+  onTransfer: (toAddress: string) => void;
 }
 const TransferCard: React.FC<TransforCardProps> = props => {
   const { owner, provider, blockExplorer, address, onChange, onTransfer } = props;
   return (
     <div className="flex items-start p-6 pet-card">
-      <img src={SamplePet} className="w-40 h-40 align-middle rounded-xl" alt="Pet"></img>
+      <img src={owner.image || SamplePet} className="w-40 h-40 align-middle rounded-xl" alt="Pet"></img>
       <div className="flex flex-col justify-between flex-1 h-40 ml-11">
         <div className="flex items-center">
-          <div className="leading-7 text-2xs">#10 Rhino</div>
-          <Address address={owner.owner} ensProvider={provider} blockExplorer={blockExplorer}></Address>
-          {/* <div className="ml-4 leading-none text-md text-white70">owner: 0x820E</div> */}
+          <div className="leading-7 text-2xs">{owner.name}</div>
+          <div className="inline-flex items-center ml-4 leading-none text-md text-white70">
+            <div className="mr-2">owner:</div>
+            <Address
+              address={owner.owner}
+              ensProvider={provider}
+              blockExplorer={blockExplorer}
+              showBlockie={false}
+              fontSize={16}
+              color="rgba(255, 255, 255, 0.7)"
+            ></Address>
+          </div>
         </div>
         <div className="flex items-center w-full">
           <AddressInput
@@ -34,7 +43,7 @@ const TransferCard: React.FC<TransforCardProps> = props => {
             onChange={onChange}
           />
           <div className="flex-none ml-5 transfer-wrapper">
-            <Button type="default" size="large" onClick={() => onTransfer(address, owner.id)}>
+            <Button type="default" size="large" onClick={() => onTransfer(address)}>
               Transfer
             </Button>
           </div>

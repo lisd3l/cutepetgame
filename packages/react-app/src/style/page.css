@@ -82,6 +82,8 @@ header {
 
 .home-banner {
   z-index: 1;
+  width: 100vw;
+  height: 58vw;
 }
 
 .home-section-intro {

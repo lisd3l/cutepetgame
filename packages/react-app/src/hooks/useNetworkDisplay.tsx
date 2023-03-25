@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { NETWORK, getTargetNetwork } from '../constants';
+import { NETWORK, getTargetNetwork } from "../constants";
 import { Alert, Button } from "antd";
-import React from 'react';
+import React from "react";
 
 const NETWORKCHECK = true;
 

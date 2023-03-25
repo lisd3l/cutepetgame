@@ -43,31 +43,44 @@ interface AddressProps {
   minimized?: boolean;
   onChange?: (value: string) => void;
   fontSize?: number;
+  color?: string;
+  showBlockie?: boolean;
 }
 
-export default function Address(props: AddressProps) {
-  const address = props.value || props.address;
+export default function Address({
+  address: _address,
+  value,
+  ensProvider,
+  size,
+  blockExplorer,
+  minimized,
+  onChange,
+  fontSize,
+  color,
+  showBlockie = true,
+}: AddressProps) {
+  const address = value || _address;
 
-  const ens = useLookupAddress(props.ensProvider, address);
+  const ens = useLookupAddress(ensProvider, address);
 
   if (!address) {
     return <span></span>;
   }
 
-  let displayAddress = address.substr(0, 6);
+  let displayAddress = address.substring(0, 6);
 
   if (ens && ens.indexOf("0x") < 0) {
     displayAddress = ens;
-  } else if (props.size === "short") {
-    displayAddress += "..." + address.substr(-4);
-  } else if (props.size === "long") {
+  } else if (size === "short") {
+    displayAddress += "..." + address.substring(-4);
+  } else if (size === "long") {
     displayAddress = address;
   }
 
-  const etherscanLink = blockExplorerLink(address, props.blockExplorer || "");
-  if (props.minimized) {
+  const etherscanLink = blockExplorerLink(address, blockExplorer || "");
+  if (minimized) {
     return (
-      <span style={{ verticalAlign: "middle" }}>
+      <span className="inline-flex items-center">
         <a target="_blank" href={etherscanLink} rel="noopener noreferrer">
           <Blockies seed={address.toLowerCase()} size={8} scale={2} />
         </a>
@@ -76,18 +89,18 @@ export default function Address(props: AddressProps) {
   }
 
   let text;
-  if (props.onChange) {
+  if (onChange) {
     text = (
-      <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
-        <a target="_blank" href={etherscanLink} rel="noopener noreferrer">
+      <Text editable={{ onChange: onChange }} copyable={{ text: address }} className="addr-antd-text">
+        <a target="_blank" href={etherscanLink} rel="noopener noreferrer" className="align-middle">
           {displayAddress}
         </a>
       </Text>
     );
   } else {
     text = (
-      <Text copyable={{ text: address }}>
-        <a target="_blank" href={etherscanLink} rel="noopener noreferrer">
+      <Text copyable={{ text: address }} className="addr-antd-text">
+        <a target="_blank" href={etherscanLink} rel="noopener noreferrer" className="align-middle">
           {displayAddress}
         </a>
       </Text>
@@ -95,11 +108,13 @@ export default function Address(props: AddressProps) {
   }
 
   return (
-    <span>
-      <span style={{ verticalAlign: "middle" }}>
-        <Blockies seed={address.toLowerCase()} size={8} scale={props.fontSize ? props.fontSize / 7 : 4} />
-      </span>
-      <span style={{ verticalAlign: "middle", paddingLeft: 5, fontSize: props.fontSize ? props.fontSize : 28 }}>
+    <span className="inline-flex items-center">
+      {showBlockie && (
+        <span>
+          <Blockies seed={address.toLowerCase()} color={color} size={8} scale={fontSize ? fontSize / 7 : 4} />
+        </span>
+      )}
+      <span className="mr-1.5" style={{ fontSize: fontSize ? fontSize : 28, color }}>
         {text}
       </span>
     </span>

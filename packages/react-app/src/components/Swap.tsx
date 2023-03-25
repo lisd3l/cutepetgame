@@ -122,7 +122,8 @@ function Swap({ selectedProvider, tokenListURI }: any) {
       }
     };
     getTokenList();
-  }, [tokenListURI]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getTrades = async () => {
     if (tokenIn && tokenOut && (amountIn || amountOut)) {

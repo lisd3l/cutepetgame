@@ -48,8 +48,7 @@ export default function useAnimalPartysFetch(
       setAnimalPartys(collectibleUpdate);
     };
     updateAnimalPartys();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address]);
+  }, [address, balance, readContracts.AnimalParty]);
 
   return animalPartys;
 }

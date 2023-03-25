@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { Pagination } from "antd";
 import { useContractReader, useGasPrice, useUserProviderAndSigner } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
-import { ethers } from "ethers";
 import { Content, Footer, Header } from "../components";
 import {
   useCountDown,
@@ -30,9 +29,9 @@ const MyWallet = () => {
 
   // You can warn the user if you would like them to be on a specific network
   const localChainId = localProvider?._network?.chainId;
-  const selectedChainId = ((userSigner?.provider as any)?._network as ethers.providers.Network)?.chainId;
+  // const selectedChainId = ((userSigner?.provider as any)?._network as ethers.providers.Network)?.chainId;
 
-  const currentAddress = useCurrentAddress(injectedProvider, userSigner);
+  const currentAddress = useCurrentAddress(userSigner);
   const mainnetProvider = useMainnetProvider();
   const { readContracts, writeContracts } = useContracts(mainnetProvider, userSigner, localChainId);
 
@@ -45,9 +44,15 @@ const MyWallet = () => {
 
   // keep track of a variable from the contract in the local React state:
   const balance = useContractReader<number>(readContracts, "AnimalParty", "balanceOf", [currentAddress]) || 0;
-  const animalPartys = useAnimalPartysFetch(currentAddress, balance, readContracts);
+  const allAnimalPartys = useAnimalPartysFetch(currentAddress, balance, readContracts);
   const [transferToAddresses, setTransferToAddresses] = useState<Record<string, string>>({});
   const blockExplorer = targetNetwork.blockExplorer;
+
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
+  const animalPartys = useMemo(() => {
+    return allAnimalPartys.slice(pageSize * (page - 1), pageSize * page);
+  }, [page, allAnimalPartys]);
 
   return (
     <div className="page page-wallet">
@@ -90,18 +95,19 @@ const MyWallet = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
-            {animalPartys.map((animalParty, index) => {
+            {animalPartys.map(animalParty => {
+              const id = animalParty.id.toNumber();
               return (
                 <TransferCard
-                  key={index}
+                  key={`${id}_${animalParty.uri}_${animalParty.owner}`}
                   owner={animalParty}
                   provider={mainnetProvider}
                   blockExplorer={blockExplorer}
-                  address={transferToAddresses[animalParty.id]}
+                  address={transferToAddresses[id]}
                   onChange={val => {
-                    setTransferToAddresses({ ...transferToAddresses, [animalParty.id]: val });
+                    setTransferToAddresses({ ...transferToAddresses, [id]: val });
                   }}
-                  onTransfer={(toAddress, id) => {
+                  onTransfer={toAddress => {
                     console.log("writeContracts", writeContracts);
                     tx(writeContracts.AnimalParty.transferFrom(currentAddress, toAddress, id));
                   }}
@@ -110,7 +116,14 @@ const MyWallet = () => {
             })}
           </div>
           <div className="flex justify-end">
-            <Pagination simple pageSize={5} total={20} className="wallet-pagination" />
+            <Pagination
+              simple
+              current={page}
+              pageSize={pageSize}
+              total={allAnimalPartys.length}
+              onChange={p => setPage(p)}
+              className="wallet-pagination"
+            />
           </div>
         </div>
       </Content>

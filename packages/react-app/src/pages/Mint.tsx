@@ -16,7 +16,7 @@ const Mint = () => {
   const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider);
   const userSigner = userProviderAndSigner?.signer;
 
-  const currentAddress = useCurrentAddress(injectedProvider, userSigner);
+  const currentAddress = useCurrentAddress(userSigner);
   const mainnetProvider = useMainnetProvider();
 
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */

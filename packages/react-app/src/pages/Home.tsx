@@ -1,8 +1,56 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Footer, Content, Header } from "../components";
 import BannerBg from "../assets/imgs/banner.png";
+import video1 from "../assets/videos/bv01.mp4";
+import video2 from "../assets/videos/bv02.mp4";
+import video3 from "../assets/videos/bv03.mp4";
 
 export default function Home() {
+  const [videos, setVideos] = useState<string[]>([]);
+  const [currIndex, setCurrIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [updateIdx, setUpdateIdx] = useState(0);
+
+  useEffect(() => {
+    Promise.all(
+      [video1, video2, video3].map(v => {
+        return new Promise<string>(resolve => {
+          const vElement = document.createElement("video");
+          vElement.src = v;
+          vElement.addEventListener("loadeddata", () => {
+            resolve(v);
+          });
+        });
+      }),
+    ).then(val => setVideos(val));
+  }, []);
+
+  const playVideo = useCallback(() => {
+    const randomIdx = Math.floor(videos.length * Math.random());
+    setCurrIndex(randomIdx);
+    setUpdateIdx(updateIdx + 1);
+  }, [videos, updateIdx]);
+
+  useEffect(() => {
+    if (videoRef.current && updateIdx > 0) {
+      videoRef.current.addEventListener("ended", playVideo, { once: true });
+      const pp = videoRef.current.play();
+      if (pp !== undefined) {
+        pp.then(_ => {}).catch(_ => {
+          console.log("playback prevented");
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateIdx]);
+
+  useEffect(() => {
+    if (videos.length > 0) {
+      playVideo();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videos]);
+
   return (
     <div className="page page-home">
       <Content>
@@ -16,7 +64,14 @@ export default function Home() {
           <a href="/mint">Mint</a>
         </Header>
         <div className="relative home-banner">
-          <img src={BannerBg} alt="" className="w-full align-center" />
+          <video
+            src={videos[currIndex]}
+            muted
+            playsInline
+            poster={BannerBg}
+            className="object-cover w-full h-full align-center"
+            ref={videoRef}
+          ></video>
         </div>
         <div className="relative overflow-hidden text-xs text-center px-36 home-section-intro bg-theme2">
           <div className="p-title mb-68px">Pet Battle</div>
