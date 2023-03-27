@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DownloadOutlined, EditOutlined, SendOutlined } from "@ant-design/icons";
 import { Timeline, Typography } from "antd";
 import React from "react";

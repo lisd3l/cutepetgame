@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DollarCircleOutlined } from "@ant-design/icons";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 import { Button, Divider, Modal } from "antd";

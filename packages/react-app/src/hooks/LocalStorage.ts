@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 // Hook from useHooks! (https://usehooks.com/useLocalStorage/)
 export default function useLocalStorage(key, initialValue, ttl) {

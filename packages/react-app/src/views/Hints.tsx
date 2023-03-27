@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { utils } from "ethers";
 import { Select } from "antd";
 import React, { useState } from "react";

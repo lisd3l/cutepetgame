@@ -785,7 +785,7 @@ const DAIABI = [
 ];
 
 // Mainnet DAI, Optimism and Arbitrium Rollup Contracts with local addresses
-module.exports = {
+const externalContracts = {
   1: {
     contracts: {
       DAI: {
@@ -799,3 +799,5 @@ module.exports = {
     },
   },
 };
+
+export default externalContracts;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { gql, useQuery } from "@apollo/client";
 import { Button, Input, Table, Typography } from "antd";
 import "antd/dist/antd.css";

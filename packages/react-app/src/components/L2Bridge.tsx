@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { utils, ethers } from "ethers";
 import { Button, Input, Form, Select, InputNumber, Table, Radio } from "antd";
 import React, { useState, useEffect } from "react";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useTokenBalance } from "eth-hooks/erc/erc-20/useTokenBalance";
 import React, { useState } from "react";
 

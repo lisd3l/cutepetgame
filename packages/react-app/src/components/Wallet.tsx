@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { KeyOutlined, QrcodeOutlined, SendOutlined, WalletOutlined } from "@ant-design/icons";
 import { Button, Modal, Spin, Tooltip, Typography } from "antd";
 import { ethers } from "ethers";

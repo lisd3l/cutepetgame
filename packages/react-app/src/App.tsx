@@ -6,7 +6,7 @@ import { IconSprite } from "./components";
 import "./App.css";
 import "./style/less/index.less";
 
-export default function App() {
+export default function App({ subgraphUri }: { subgraphUri: string }) {
   return (
     <BrowserRouter>
       <IconSprite />
