@@ -1,56 +1,67 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Footer, Content, Header, PetCarousel } from "../components";
 import BannerBg from "../assets/imgs/banner.png";
 import video1 from "../assets/videos/bv01.mp4";
 import video2 from "../assets/videos/bv02.mp4";
 import video3 from "../assets/videos/bv03.mp4";
+import { MintUrl } from "../helpers/utils";
 
 export default function Home() {
-  const [videos, setVideos] = useState<string[]>([]);
-  const [currIndex, setCurrIndex] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [currIndex, setCurrIndex] = useState([0, 0]);
+  const videoRef1 = useRef<HTMLVideoElement>(null);
+  const videoRef2 = useRef<HTMLVideoElement>(null);
+  const videoRef3 = useRef<HTMLVideoElement>(null);
   const [updateIdx, setUpdateIdx] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     Promise.all(
-      [video1, video2, video3].map(v => {
-        return new Promise<string>(resolve => {
-          const vElement = document.createElement("video");
-          vElement.src = v;
-          vElement.preload = "auto";
-          vElement.addEventListener("canplaythrough", () => {
-            resolve(v);
-          });
+      [videoRef1, videoRef2, videoRef3].map(v => {
+        return new Promise<boolean>(resolve => {
+          if (v.current) {
+            v.current.preload = "auto";
+            v.current.addEventListener("canplaythrough", () => {
+              resolve(true);
+            });
+          }
         });
       }),
-    ).then(val => setVideos(val));
+    ).then(() => setLoaded(true));
   }, []);
 
   const playVideo = useCallback(() => {
-    const randomIdx = Math.floor(videos.length * Math.random());
-    setCurrIndex(randomIdx);
+    const randomIdx = Math.floor(3 * Math.random());
+    setCurrIndex([currIndex[1], randomIdx]);
     setUpdateIdx(updateIdx + 1);
-  }, [videos, updateIdx]);
+  }, [currIndex, updateIdx]);
 
   useEffect(() => {
-    if (videoRef.current && updateIdx > 0) {
-      videoRef.current.addEventListener("ended", playVideo, { once: true });
-      const pp = videoRef.current.play();
-      if (pp !== undefined) {
-        pp.then(_ => {}).catch(_ => {
-          console.log("playback prevented");
-        });
+    if (updateIdx > 0) {
+      const oldVideoRef = [videoRef1, videoRef2, videoRef3][currIndex[0]];
+      const newVideoRef = [videoRef1, videoRef2, videoRef3][currIndex[1]];
+      if (currIndex[0] !== currIndex[1] && oldVideoRef.current && newVideoRef.current) {
+        oldVideoRef.current.style.opacity = "0";
+        newVideoRef.current.style.opacity = "1";
+      }
+      if (newVideoRef.current) {
+        newVideoRef.current.addEventListener("ended", playVideo, { once: true });
+        setTimeout(() => {
+          const pp = newVideoRef.current?.play();
+          if (pp !== undefined) {
+            pp.then(_ => {}).catch(_ => {
+              console.log("playback prevented");
+            });
+          }
+        }, 1000);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateIdx]);
 
   useEffect(() => {
-    if (videos.length > 0) {
-      playVideo();
-    }
+    playVideo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videos]);
+  }, [loaded]);
 
   return (
     <div className="page page-home">
@@ -61,16 +72,35 @@ export default function Home() {
           <a href="#fairness">Fairness</a>
           <a href="#community">community</a>
           <a href="#roadmap">RoadMap</a>
-          <a href="/wallet">MYWallet</a>
+          <a href="/wallet">My Wallet</a>
+          <a href={MintUrl} target="_blank" rel="noreferrer">
+            Mint
+          </a>
         </Header>
         <div className="relative home-banner">
           <video
-            src={videos[currIndex]}
+            src={video1}
             muted
             playsInline
             poster={BannerBg}
             className="object-cover w-full h-full align-center"
-            ref={videoRef}
+            ref={videoRef1}
+          ></video>
+          <video
+            src={video2}
+            muted
+            playsInline
+            poster={BannerBg}
+            className="object-cover w-full h-full align-center"
+            ref={videoRef2}
+          ></video>
+          <video
+            src={video3}
+            muted
+            playsInline
+            poster={BannerBg}
+            className="object-cover w-full h-full align-center"
+            ref={videoRef3}
           ></video>
         </div>
         <div className="relative overflow-hidden text-xs text-center px-36 home-section-intro bg-theme2">

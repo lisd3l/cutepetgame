@@ -17,6 +17,7 @@ import {
 import { TransferCard, Account } from "../components";
 import { getTargetNetwork } from "../constants";
 import { Transactor } from "../helpers";
+import { MintUrl } from "../helpers/utils";
 
 const MyWallet = () => {
   const targetNetwork = getTargetNetwork();
@@ -65,6 +66,9 @@ const MyWallet = () => {
       <Content>
         <Header>
           <a href="/">Home</a>
+          <a href={MintUrl} target="_blank" rel="noreferrer">
+            Mint
+          </a>
           <Account
             address={currentAddress}
             localProvider={localProvider}

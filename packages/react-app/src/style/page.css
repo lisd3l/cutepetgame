@@ -16,6 +16,10 @@
   padding-bottom: var(--footer-height);
 }
 
+:root {
+  --pet-logo-width: 240px;
+}
+
 footer.section-footer {
   height: var(--footer-height);
   margin-top: calc(var(--footer-height) * -1);
@@ -37,17 +41,17 @@ footer.section-footer {
   .pet-logo {
     @apply absolute bottom-0;
     height: auto;
-    width: 360px;
+    width: var(--pet-logo-width);
     animation: walktrough 9.6s steps(240, end) infinite;
   }
 }
  
 @keyframes walktrough {
   0% {
-    left: -360px;
+    left: calc(var(--pet-logo-width) * -1);
   }
   100% {
-    left: calc(100% + 360px);
+    left: calc(100% + var(--pet-logo-width));
   }
 }
 
@@ -100,6 +104,13 @@ header {
   z-index: 1;
   width: 100vw;
   height: 58vw;
+  background: url(../assets/imgs/banner.png) center/cover no-repeat;
+
+  video {
+    @apply absolute inset-0;
+    opacity: 0;
+    transition: opacity 1s;
+  }
 }
 
 .home-section-intro {

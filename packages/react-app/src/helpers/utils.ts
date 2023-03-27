@@ -17,3 +17,5 @@ export const AnimalConstants = [
     method: "changeDog",
   },
 ];
+
+export const MintUrl = "https://mundane-channel.surge.sh/";
