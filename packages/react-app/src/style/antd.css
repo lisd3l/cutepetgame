@@ -4,6 +4,10 @@
 
 .ant-btn {
   backdrop-filter: blur(30px);
+
+  .ant-btn-loading-icon {
+    @apply leading-none align-top;
+  }
 }
 
 .addr-input.addr-input,

@@ -1,4 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
+import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 
 export default function useAnimalPartysFetch(
@@ -18,6 +19,8 @@ export default function useAnimalPartysFetch(
           console.log("tokenId", tokenId);
           const tokenURI = await readContracts.AnimalParty.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
+          const tokenStatic: BigNumber = await readContracts.AnimalParty.tokenStatic(tokenId);
+          console.log("tokenStatic", tokenStatic);
 
           const reg = /^\s+|\s+$/g;
 
@@ -31,7 +34,13 @@ export default function useAnimalPartysFetch(
             );
             if (imageResponse.ok) {
               jsonManifestBuffer.image = imageResponse.url;
-              collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifestBuffer });
+              collectibleUpdate.push({
+                id: tokenId,
+                uri: tokenURI,
+                category: tokenStatic.toNumber(),
+                owner: address,
+                ...jsonManifestBuffer,
+              });
             }
           }
           // try {

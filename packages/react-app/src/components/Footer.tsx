@@ -6,11 +6,7 @@ export default function Footer() {
   return (
     <footer className="relative flex justify-between text-white section-footer">
       <img src={PetGif} alt="Pet walk" className="pet-logo" />
-      <div className="font-rb2-b text-6md">
-        PET
-        <br />
-        BATTLE
-      </div>
+      <div className="font-rb2-b text-6md">ConPet</div>
       <div className="text-2xs">
         Slogan slogan slogan. Slogan slogan
         <br />

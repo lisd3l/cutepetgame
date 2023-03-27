@@ -5,6 +5,7 @@ interface AnimalParty {
   uri: string;
   image: string;
   description: string;
+  category: number;
 }
 // Sample Data:
 //   {

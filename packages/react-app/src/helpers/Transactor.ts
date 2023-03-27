@@ -2,6 +2,7 @@ import { notification } from "antd";
 import Notify, { InitOptions } from "bnc-notify";
 import { BLOCKNATIVE_DAPPID } from "../constants";
 import { ContractFunction, ethers, Signer } from "ethers";
+import { DEBUG } from "../config";
 
 // this should probably just be renamed to "notifier"
 // it is basically just a wrapper around BlockNative's wonderful Notify.js
@@ -9,8 +10,6 @@ import { ContractFunction, ethers, Signer } from "ethers";
 const callbacks: {
   [key: string]: (tx: any) => void;
 } = {};
-
-const DEBUG = true;
 
 const Transactor: (
   providerOrSigner?: Signer | ethers.providers.Provider,

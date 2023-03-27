@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pagination } from "antd";
+import { Pagination, notification } from "antd";
 import { useContractReader, useGasPrice, useUserProviderAndSigner } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import { Content, Footer, Header } from "../components";
@@ -11,13 +11,14 @@ import {
   useMainnetProvider,
   useLocalProvider,
   useContracts,
+  useTimeLeft,
+  useAnimalAmount,
 } from "../hooks";
 import { TransferCard, Account } from "../components";
 import { getTargetNetwork } from "../constants";
 import { Transactor } from "../helpers";
 
 const MyWallet = () => {
-  const timeLeft = useCountDown();
   const targetNetwork = getTargetNetwork();
 
   const localProvider = useLocalProvider();
@@ -41,12 +42,17 @@ const MyWallet = () => {
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // The transactor wraps transactions and provides notificiations
   const tx = useMemo(() => Transactor(userSigner, gasPrice), [gasPrice, userSigner]);
-
+  // get time left from contracts
+  const timeLeftContract = useTimeLeft(readContracts);
+  const timeLeft = useCountDown(timeLeftContract);
+  const animalAmount = useAnimalAmount(readContracts);
   // keep track of a variable from the contract in the local React state:
   const balance = useContractReader<number>(readContracts, "AnimalParty", "balanceOf", [currentAddress]) || 0;
   const allAnimalPartys = useAnimalPartysFetch(currentAddress, balance, readContracts);
+
   const [transferToAddresses, setTransferToAddresses] = useState<Record<string, string>>({});
   const blockExplorer = targetNetwork.blockExplorer;
+  const [minting, setMinting] = useState<Record<number, boolean>>({});
 
   const [page, setPage] = useState(1);
   const pageSize = 6;
@@ -81,15 +87,15 @@ const MyWallet = () => {
             <div className="inline-flex items-center mt-4 font-bold">
               <div className="inline-flex items-center" title="Cat">
                 <div className="mr-2 icon-pet icon-pet-cat"></div>
-                <div className="leading-tight text-white text-2md">12,456</div>
+                <div className="leading-tight text-white text-2md">{animalAmount[0].toLocaleString()}</div>
               </div>
               <div className="inline-flex items-center ml-20" title="Dog">
                 <div className="mr-2 icon-pet icon-pet-dog"></div>
-                <div className="leading-tight text-2md text-pgreen">2,456</div>
+                <div className="leading-tight text-2md text-pgreen">{animalAmount[1].toLocaleString()}</div>
               </div>
               <div className="inline-flex items-center ml-20" title="Mouse">
                 <div className="mr-2 icon-pet icon-pet-mouse"></div>
-                <div className="leading-tight text-2md text-pred">22,456</div>
+                <div className="leading-tight text-2md text-pred">{animalAmount[2].toLocaleString()}</div>
               </div>
             </div>
           </div>
@@ -103,10 +109,49 @@ const MyWallet = () => {
                   provider={mainnetProvider}
                   blockExplorer={blockExplorer}
                   address={transferToAddresses[id]}
+                  minting={minting[id]}
                   onChange={val => {
                     setTransferToAddresses({ ...transferToAddresses, [id]: val });
                   }}
+                  onMint={method => {
+                    if (minting[id]) return;
+                    setMinting({ ...minting, [id]: true });
+                    tx(
+                      writeContracts?.AnimalParty?.[method]?.(id),
+                      (update: {
+                        status: string | number;
+                        hash: string;
+                        gasUsed: string;
+                        gasLimit: any;
+                        gas: any;
+                        gasPrice: string;
+                      }) => {
+                        console.log("📡 Transaction Update:", update);
+                        if (update && (update.status === "confirmed" || update.status === 1)) {
+                          console.log(" 🍾 Transaction " + update.hash + " finished!");
+                          console.log(
+                            " ⛽️ " +
+                              update.gasUsed +
+                              "/" +
+                              (update.gasLimit || update.gas) +
+                              " @ " +
+                              parseFloat(update.gasPrice) / 1000000000 +
+                              " gwei",
+                          );
+                        }
+                      },
+                    ).finally(() => {
+                      setMinting({ ...minting, [id]: false });
+                    });
+                  }}
                   onTransfer={toAddress => {
+                    if (!toAddress) {
+                      notification.error({
+                        message: "Error",
+                        description: "Please input a valid address",
+                      });
+                      return;
+                    }
                     console.log("writeContracts", writeContracts);
                     tx(writeContracts.AnimalParty.transferFrom(currentAddress, toAddress, id));
                   }}

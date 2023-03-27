@@ -17,7 +17,8 @@ export default function Home() {
         return new Promise<string>(resolve => {
           const vElement = document.createElement("video");
           vElement.src = v;
-          vElement.addEventListener("loadeddata", () => {
+          vElement.preload = "auto";
+          vElement.addEventListener("canplaythrough", () => {
             resolve(v);
           });
         });

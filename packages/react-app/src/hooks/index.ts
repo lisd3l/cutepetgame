@@ -9,4 +9,6 @@ export { default as useLocalProvider } from "./useLocalProvider";
 export { default as useMainnetProvider } from "./useMainnetProvider";
 export { default as useDebugger } from "./useDebugger";
 export { default as useContracts } from "./useContracts";
+export { default as useTimeLeft } from "./useTimeLeft";
+export { default as useAnimalAmount } from "./useAnimalAmount";
 export * from "./useContractConfig";

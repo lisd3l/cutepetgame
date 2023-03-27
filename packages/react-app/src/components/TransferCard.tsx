@@ -5,17 +5,20 @@ import SamplePet from "../assets/imgs/sample-pet.png";
 import AddressInput from "./AddressInput";
 import Address from "./Address";
 import type { TEthersProvider } from "eth-hooks/models/providerTypes";
+import { AnimalConstants } from "../helpers/utils";
 
 interface TransforCardProps {
   owner: AnimalParty;
   provider: TEthersProvider;
   blockExplorer?: string;
   address: string;
+  minting: boolean;
   onChange: (value: string) => void;
   onTransfer: (toAddress: string) => void;
+  onMint: (method: string) => void;
 }
 const TransferCard: React.FC<TransforCardProps> = props => {
-  const { owner, provider, blockExplorer, address, onChange, onTransfer } = props;
+  const { owner, minting, provider, blockExplorer, address, onChange, onTransfer, onMint } = props;
   return (
     <div className="flex items-start p-6 pet-card">
       <img src={owner.image || SamplePet} className="w-40 h-40 align-middle rounded-xl" alt="Pet"></img>
@@ -49,12 +52,18 @@ const TransferCard: React.FC<TransforCardProps> = props => {
           </div>
         </div>
         <div>
-          <Button type="primary" size="large">
-            Convert Cat
-          </Button>
-          <Button className="ml-5" type="primary" size="large">
-            Convert Mouse
-          </Button>
+          {AnimalConstants.filter(ac => ac.key !== owner.category).map(ac => (
+            <Button
+              key={ac.key}
+              type="primary"
+              size="large"
+              className="mr-2"
+              onClick={() => onMint(ac.method)}
+              loading={minting}
+            >
+              Convert {ac.name}
+            </Button>
+          ))}
         </div>
       </div>
     </div>
