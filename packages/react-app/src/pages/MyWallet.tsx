@@ -19,6 +19,7 @@ import { TransferCard, Account } from "../components";
 import { getTargetNetwork } from "../constants";
 import { Transactor } from "../helpers";
 import { MintUrl } from "../helpers/utils";
+import { Link } from "react-router-dom";
 
 const MyWallet = () => {
   const targetNetwork = getTargetNetwork();
@@ -68,7 +69,7 @@ const MyWallet = () => {
     <div className="page page-wallet">
       <Content>
         <Header>
-          <a href="/">Home</a>
+          <Link to="/">Home</Link>
           <a href={MintUrl} target="_blank" rel="noreferrer">
             Mint
           </a>
