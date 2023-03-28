@@ -2,7 +2,7 @@ import { Contract } from "@ethersproject/contracts";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 
-export default function useAnimalAmount(readContracts: Record<string, Contract>) {
+export default function useAnimalAmount(transferEventCount: number, readContracts: Record<string, Contract>) {
   // animalAmount[[cat], [dog], [mouse]]
   const [animalAmount, setAnimalAmount] = useState([0, 0, 0]);
   useEffect(() => {
@@ -17,6 +17,6 @@ export default function useAnimalAmount(readContracts: Record<string, Contract>)
       }
     };
     checkAnimalAmount();
-  }, [readContracts.AnimalParty]);
+  }, [transferEventCount, readContracts.AnimalParty]);
   return animalAmount;
 }
