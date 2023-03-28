@@ -69,7 +69,7 @@ const MyWallet = () => {
     <div className="page page-wallet">
       <Content>
         <Header>
-          <Link to="/">Home</Link>
+          <Link to="/" onClick={() => readContracts.AnimalParty?.removeAllListeners()}>Home</Link>
           <a href={MintUrl} target="_blank" rel="noreferrer">
             Mint
           </a>
