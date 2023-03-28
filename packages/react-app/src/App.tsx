@@ -8,7 +8,7 @@ import "./style/less/index.less";
 
 export default function App({ subgraphUri }: { subgraphUri: string }) {
   return (
-    <BrowserRouter>
+    <BrowserRouter forceRefresh={false}>
       <IconSprite />
       <Routes />
     </BrowserRouter>

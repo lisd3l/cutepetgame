@@ -5,6 +5,7 @@ import video1 from "../assets/videos/bv01.mp4";
 import video2 from "../assets/videos/bv02.mp4";
 import video3 from "../assets/videos/bv03.mp4";
 import { MintUrl } from "../helpers/utils";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -72,7 +73,7 @@ export default function Home() {
           <a href="#fairness">Fairness</a>
           <a href="#community">community</a>
           <a href="#roadmap">RoadMap</a>
-          <a href="/wallet">My Wallet</a>
+          <Link to="/wallet">My Wallet</Link>
           <a href={MintUrl} target="_blank" rel="noreferrer">
             Mint
           </a>
