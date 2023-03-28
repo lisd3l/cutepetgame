@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pagination, notification } from "antd";
+import { Pagination, Skeleton, notification } from "antd";
 import { useContractReader, useGasPrice, useUserProviderAndSigner } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import { Content, Footer, Header } from "../components";
@@ -107,66 +107,74 @@ const MyWallet = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
-            {animalPartys.map(animalParty => {
-              const id = animalParty.id.toNumber();
-              return (
-                <TransferCard
-                  key={`${id}_${animalParty.uri}_${animalParty.owner}`}
-                  owner={animalParty}
-                  provider={mainnetProvider}
-                  blockExplorer={blockExplorer}
-                  address={transferToAddresses[id]}
-                  minting={minting[id]}
-                  onChange={val => {
-                    setTransferToAddresses({ ...transferToAddresses, [id]: val });
-                  }}
-                  onMint={method => {
-                    if (minting[id]) return;
-                    setMinting({ ...minting, [id]: true });
-                    tx(
-                      writeContracts?.AnimalParty?.[method]?.(id),
-                      (update: {
-                        status: string | number;
-                        hash: string;
-                        gasUsed: string;
-                        gasLimit: any;
-                        gas: any;
-                        gasPrice: string;
-                      }) => {
-                        console.log("📡 Transaction Update:", update);
-                        if (update && (update.status === "confirmed" || update.status === 1)) {
-                          console.log(" 🍾 Transaction " + update.hash + " finished!");
-                          console.log(
-                            " ⛽️ " +
-                              update.gasUsed +
-                              "/" +
-                              (update.gasLimit || update.gas) +
-                              " @ " +
-                              parseFloat(update.gasPrice) / 1000000000 +
-                              " gwei",
-                          );
-                        }
-                      },
-                    ).finally(() => {
-                      setMinting({ ...minting, [id]: false });
-                    });
-                  }}
-                  onTransfer={toAddress => {
-                    if (!toAddress) {
-                      notification.error({
-                        message: "Error",
-                        description: "Please input a valid address",
+          {animalPartys.length === 0 ? (
+            <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
+              {new Array(6).fill(0).map((_, i) => (
+                <Skeleton key={i} active avatar className="pet-skeleton" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
+              {animalPartys.map(animalParty => {
+                const id = animalParty.id.toNumber();
+                return (
+                  <TransferCard
+                    key={`${id}_${animalParty.uri}_${animalParty.owner}`}
+                    owner={animalParty}
+                    provider={mainnetProvider}
+                    blockExplorer={blockExplorer}
+                    address={transferToAddresses[id]}
+                    minting={minting[id]}
+                    onChange={val => {
+                      setTransferToAddresses({ ...transferToAddresses, [id]: val });
+                    }}
+                    onMint={method => {
+                      if (minting[id]) return;
+                      setMinting({ ...minting, [id]: true });
+                      tx(
+                        writeContracts?.AnimalParty?.[method]?.(id),
+                        (update: {
+                          status: string | number;
+                          hash: string;
+                          gasUsed: string;
+                          gasLimit: any;
+                          gas: any;
+                          gasPrice: string;
+                        }) => {
+                          console.log("📡 Transaction Update:", update);
+                          if (update && (update.status === "confirmed" || update.status === 1)) {
+                            console.log(" 🍾 Transaction " + update.hash + " finished!");
+                            console.log(
+                              " ⛽️ " +
+                                update.gasUsed +
+                                "/" +
+                                (update.gasLimit || update.gas) +
+                                " @ " +
+                                parseFloat(update.gasPrice) / 1000000000 +
+                                " gwei",
+                            );
+                          }
+                        },
+                      ).finally(() => {
+                        setMinting({ ...minting, [id]: false });
                       });
-                      return;
-                    }
-                    console.log("writeContracts", writeContracts);
-                    tx(writeContracts.AnimalParty.transferFrom(currentAddress, toAddress, id));
-                  }}
-                />
-              );
-            })}
-          </div>
+                    }}
+                    onTransfer={toAddress => {
+                      if (!toAddress) {
+                        notification.error({
+                          message: "Error",
+                          description: "Please input a valid address",
+                        });
+                        return;
+                      }
+                      console.log("writeContracts", writeContracts);
+                      tx(writeContracts.AnimalParty.transferFrom(currentAddress, toAddress, id));
+                    }}
+                  />
+                );
+              })}
+            </div>
+          )}
           <div className="flex justify-end">
             <Pagination
               simple

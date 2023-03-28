@@ -18,7 +18,7 @@ const Transactor: (
 ) => ContractFunction = (providerOrSigner, gasPrice, etherscan) => {
   // eslint-disable-next-line consistent-return
   return async (tx: any, callback?: (tx: any) => void) => {
-    if (typeof providerOrSigner !== "undefined") return;
+    if (typeof providerOrSigner === "undefined") return;
     let signer: ethers.Signer | undefined;
     let network: ethers.providers.Network | undefined;
     let provider: ethers.providers.Provider | undefined;

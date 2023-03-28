@@ -20,3 +20,7 @@ code {
 *:after {
   box-sizing: border-box;
 }
+
+.web3modal-modal-lightbox {
+  z-index: 50 !important;
+}

@@ -3,7 +3,7 @@ import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 
 export default function useAnimalPartysFetch(
-  transferEventCount: number, 
+  transferEventCount: number,
   address: string,
   balance: number,
   readContracts: Record<string, Contract>,
@@ -58,6 +58,7 @@ export default function useAnimalPartysFetch(
       setAnimalPartys(collectibleUpdate);
     };
     updateAnimalPartys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transferEventCount, address, balance, readContracts.AnimalParty]);
 
   return animalPartys;

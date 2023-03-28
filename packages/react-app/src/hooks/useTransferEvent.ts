@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 export default function useTransferEvent(readContracts: Record<string, Contract>) {
   const [transferEventCount, setTransferEventCount] = useState(1);
-  const filter = readContracts.AnimalParty?.filters.Transfer(null, null, null);
   useEffect(() => {
+    const filter = readContracts.AnimalParty?.filters.Transfer(null, null, null);
     readContracts.AnimalParty?.on(filter, (from: string, to: string, tokenId: BigNumber) => {
       if (from && to && tokenId.gte(0)) {
         setTransferEventCount(transferEventCount + 1);
@@ -13,7 +13,8 @@ export default function useTransferEvent(readContracts: Record<string, Contract>
     });
     return () => {
       readContracts.AnimalParty?.removeAllListeners();
-    }
-  }, []);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [readContracts.AnimalParty]);
   return transferEventCount;
 }

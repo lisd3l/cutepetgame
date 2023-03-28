@@ -68,6 +68,32 @@
   }
 }
 
+.pet-skeleton.ant-skeleton {
+
+  .ant-skeleton-avatar {
+    @apply w-40 h-40 rounded-xl;
+  }
+
+  &.ant-skeleton-with-avatar .ant-skeleton-content .ant-skeleton-title {
+    @apply mt-0;
+
+    & + .ant-skeleton-paragraph {
+      @apply mt-9;
+    }
+  }
+
+  .ant-skeleton-content {
+
+    .ant-skeleton-title {
+      @apply h-7;
+    }
+
+    .ant-skeleton-paragraph > li {
+      @apply h-10;
+    }
+  }
+}
+
 .ant-pagination.wallet-pagination {
   @apply p-2.5 text-white text-md;
 
