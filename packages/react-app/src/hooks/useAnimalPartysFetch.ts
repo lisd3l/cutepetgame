@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts";
 import { BigNumber } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function useAnimalPartysFetch(
   transferEventCount: number,
@@ -9,8 +9,10 @@ export default function useAnimalPartysFetch(
   readContracts: Record<string, Contract>,
 ) {
   const [animalPartys, setAnimalPartys] = useState<AnimalParty[]>([]);
+  let isMounted = useRef(false);
 
   useEffect(() => {
+    isMounted.current = true;
     const updateAnimalPartys = async () => {
       const collectibleUpdate: any[] = [];
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
@@ -55,9 +57,14 @@ export default function useAnimalPartysFetch(
           console.log(e);
         }
       }
-      setAnimalPartys(collectibleUpdate);
+      if (isMounted.current) {
+        setAnimalPartys(collectibleUpdate);
+      }
     };
     updateAnimalPartys();
+    return () => {
+      isMounted.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transferEventCount, address, balance, readContracts.AnimalParty]);
 
