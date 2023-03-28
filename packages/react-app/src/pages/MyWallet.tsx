@@ -13,6 +13,7 @@ import {
   useContracts,
   useTimeLeft,
   useAnimalAmount,
+  useTransferEvent,
 } from "../hooks";
 import { TransferCard, Account } from "../components";
 import { getTargetNetwork } from "../constants";
@@ -44,13 +45,15 @@ const MyWallet = () => {
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // The transactor wraps transactions and provides notificiations
   const tx = useMemo(() => Transactor(userSigner, gasPrice), [gasPrice, userSigner]);
+
+  const transferEventCount = useTransferEvent(readContracts);
   // get time left from contracts
   const timeLeftContract = useTimeLeft(readContracts);
   const timeLeft = useCountDown(timeLeftContract);
-  const animalAmount = useAnimalAmount(readContracts);
+  const animalAmount = useAnimalAmount(transferEventCount, readContracts);
   // keep track of a variable from the contract in the local React state:
   const balance = useContractReader<number>(readContracts, "AnimalParty", "balanceOf", [currentAddress]) || 0;
-  const allAnimalPartys = useAnimalPartysFetch(currentAddress, balance, readContracts);
+  const allAnimalPartys = useAnimalPartysFetch(transferEventCount, currentAddress, balance, readContracts);
 
   const [transferToAddresses, setTransferToAddresses] = useState<Record<string, string>>({});
   const blockExplorer = targetNetwork.blockExplorer;
