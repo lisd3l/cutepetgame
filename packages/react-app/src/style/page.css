@@ -70,28 +70,54 @@ header {
 
     @apply mx-auto flex items-center justify-end;
     max-width: 1632px;
-    width: 85vw;
     height: var(--header-height);
     border-radius: 40px;
     padding: 0 3.676%;
+    width: 85vw;
 
     &:before {
       content: "";
       position: absolute;
-      left: 3.676%;
-      bottom: 12px;
       width: 262px;
       height: 125px;
+      left: 32px;
+      bottom: 12px;
       background: url(../assets/imgs/header-logo.png) center / cover no-repeat at-2x;
     }
 
     nav {
-      @apply font-rb2 text-3xs text-white;
+      @apply font-rb2 text-3xs text-white xl:text-2xs lg:text-lg md:text-md;
 
       a,
       button {
-        @apply ml-10;
+        @apply ml-8 xl:ml-6 lg:ml-4;
       }
+    }
+  }
+}
+
+@screen xl {
+  header .header {
+    width: 90vw;
+    
+    &:before {
+      left: 40px;
+      bottom: 20px;
+      width: 210px;
+      height: 100px;
+    }
+  }
+}
+
+@screen lg {
+  header .header {
+    width: 96vw;
+
+    &:before {
+      left: 16px;
+      bottom: 20px;
+      width: 131px;
+      height: 62.5px;
     }
   }
 }

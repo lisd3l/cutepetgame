@@ -1,3 +1,4 @@
+// deprecated file
 // @ts-nocheck
 import { Button, Col, Menu, Row, InputNumber } from "antd";
 import {

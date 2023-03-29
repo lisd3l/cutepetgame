@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
+  purge: ["./src/**/*.{js,jsx,ts,tsx,css}", "./public/index.html"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontSize: {
@@ -13,6 +13,12 @@ module.exports = {
       "4xs": "48px",
       "4md": "64px",
       "6md": ["96px", "97px"],
+    },
+    screens: {
+      xl: { max: "1800px" },
+      lg: { max: "1280px" },
+      md: { max: "1024px" },
+      sm: { max: "768px" },
     },
     extend: {
       fontFamily: {
