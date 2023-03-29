@@ -2,8 +2,13 @@ import { Contract } from "@ethersproject/contracts";
 import { BigNumber } from "ethers";
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * get animal amount from contract
+ * @param transferEventCount trigger to update animal amount
+ * @param readContracts contract instance
+ * @return array of animal amount has three elements: [cat, dog, mouse]
+ */
 export default function useAnimalAmount(transferEventCount: number, readContracts: Record<string, Contract>) {
-  // animalAmount[[cat], [dog], [mouse]]
   const [animalAmount, setAnimalAmount] = useState([0, 0, 0]);
   let isMounted = useRef(false);
   useEffect(() => {

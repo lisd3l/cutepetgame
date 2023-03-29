@@ -95,6 +95,7 @@
 }
 
 .stat-col {
+  @apply text-center;
 
   .stat-thumb {
     width: 300px;

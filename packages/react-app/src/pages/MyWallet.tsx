@@ -1,19 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { Pagination, Skeleton, notification } from "antd";
-import { useContractReader, useGasPrice, useUserProviderAndSigner } from "eth-hooks";
+import { useContractReader, useGasPrice } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import { Content, Footer, Header } from "../components";
 import {
   useCountDown,
   useAnimalPartysFetch,
   useCurrentAddress,
-  useWeb3Modal,
-  useMainnetProvider,
   useLocalProvider,
-  useContracts,
   useTimeLeft,
-  useAnimalAmount,
-  useTransferEvent,
+  useEthContext,
 } from "../hooks";
 import { TransferCard, Account } from "../components";
 import { getTargetNetwork } from "../constants";
@@ -25,19 +21,19 @@ const MyWallet = () => {
   const targetNetwork = getTargetNetwork();
 
   const localProvider = useLocalProvider();
-  const { web3Modal, injectedProvider, loadWeb3Modal, logoutOfWeb3Modal } = useWeb3Modal();
-
-  // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
-  const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider);
-  const userSigner = userProviderAndSigner?.signer;
-
-  // You can warn the user if you would like them to be on a specific network
-  const localChainId = localProvider?._network?.chainId;
-  // const selectedChainId = ((userSigner?.provider as any)?._network as ethers.providers.Network)?.chainId;
+  const {
+    web3Modal,
+    loadWeb3Modal,
+    logoutOfWeb3Modal,
+    userSigner,
+    mainnetProvider,
+    readContracts,
+    writeContracts,
+    transferEventCount,
+    animalAmount,
+  } = useEthContext();
 
   const currentAddress = useCurrentAddress(userSigner);
-  const mainnetProvider = useMainnetProvider();
-  const { readContracts, writeContracts } = useContracts(mainnetProvider, userSigner, localChainId);
 
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
@@ -46,14 +42,17 @@ const MyWallet = () => {
   // The transactor wraps transactions and provides notificiations
   const tx = useMemo(() => Transactor(userSigner, gasPrice), [gasPrice, userSigner]);
 
-  const transferEventCount = useTransferEvent(readContracts);
   // get time left from contracts
   const timeLeftContract = useTimeLeft(readContracts);
   const timeLeft = useCountDown(timeLeftContract);
-  const animalAmount = useAnimalAmount(transferEventCount, readContracts);
   // keep track of a variable from the contract in the local React state:
   const balance = useContractReader<number>(readContracts, "AnimalParty", "balanceOf", [currentAddress]) || 0;
-  const allAnimalPartys = useAnimalPartysFetch(transferEventCount, currentAddress, balance, readContracts);
+  const [allAnimalPartys, animalPartyLoading] = useAnimalPartysFetch(
+    transferEventCount,
+    currentAddress,
+    balance,
+    readContracts,
+  );
 
   const [transferToAddresses, setTransferToAddresses] = useState<Record<string, string>>({});
   const blockExplorer = targetNetwork.blockExplorer;
@@ -107,84 +106,97 @@ const MyWallet = () => {
               </div>
             </div>
           </div>
-          {animalPartys.length === 0 ? (
+          {!web3Modal?.cachedProvider && (
+            <div className="relative block w-1/2 py-48 mx-auto text-center">
+              <span className="block mt-2 font-pzl text-2xs text-white70">No connected yet.</span>
+            </div>
+          )}
+          {web3Modal?.cachedProvider && animalPartys.length === 0 && !animalPartyLoading && (
+            <div className="relative block w-1/2 py-48 mx-auto text-center">
+              <span className="block mt-2 font-pzl text-2xs text-white70">No pets yet.</span>
+            </div>
+          )}
+          {animalPartys.length === 0 && animalPartyLoading && (
             <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
               {new Array(6).fill(0).map((_, i) => (
                 <Skeleton key={i} active avatar className="pet-skeleton" />
               ))}
             </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
-              {animalPartys.map(animalParty => {
-                const id = animalParty.id.toNumber();
-                return (
-                  <TransferCard
-                    key={`${id}_${animalParty.uri}_${animalParty.owner}`}
-                    owner={animalParty}
-                    provider={mainnetProvider}
-                    blockExplorer={blockExplorer}
-                    address={transferToAddresses[id]}
-                    minting={minting[id]}
-                    onChange={val => {
-                      setTransferToAddresses({ ...transferToAddresses, [id]: val });
-                    }}
-                    onMint={method => {
-                      if (minting[id]) return;
-                      setMinting({ ...minting, [id]: true });
-                      tx(
-                        writeContracts?.AnimalParty?.[method]?.(id),
-                        (update: {
-                          status: string | number;
-                          hash: string;
-                          gasUsed: string;
-                          gasLimit: any;
-                          gas: any;
-                          gasPrice: string;
-                        }) => {
-                          console.log("📡 Transaction Update:", update);
-                          if (update && (update.status === "confirmed" || update.status === 1)) {
-                            console.log(" 🍾 Transaction " + update.hash + " finished!");
-                            console.log(
-                              " ⛽️ " +
-                                update.gasUsed +
-                                "/" +
-                                (update.gasLimit || update.gas) +
-                                " @ " +
-                                parseFloat(update.gasPrice) / 1000000000 +
-                                " gwei",
-                            );
-                          }
-                        },
-                      ).finally(() => {
-                        setMinting({ ...minting, [id]: false });
-                      });
-                    }}
-                    onTransfer={toAddress => {
-                      if (!toAddress) {
-                        notification.error({
-                          message: "Error",
-                          description: "Please input a valid address",
-                        });
-                        return;
-                      }
-                      console.log("writeContracts", writeContracts);
-                      tx(writeContracts.AnimalParty.transferFrom(currentAddress, toAddress, id));
-                    }}
-                  />
-                );
-              })}
-            </div>
           )}
-          <div className="flex justify-end">
-            <Pagination
-              simple
-              current={page}
-              pageSize={pageSize}
-              total={allAnimalPartys.length}
-              onChange={p => setPage(p)}
-              className="wallet-pagination"
-            />
-          </div>
+          {animalPartys.length > 0 && (
+            <>
+              <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
+                {animalPartys.map(animalParty => {
+                  const id = animalParty.id.toNumber();
+                  return (
+                    <TransferCard
+                      key={`${id}_${animalParty.uri}_${animalParty.owner}`}
+                      owner={animalParty}
+                      provider={mainnetProvider}
+                      blockExplorer={blockExplorer}
+                      address={transferToAddresses[id]}
+                      minting={minting[id]}
+                      onChange={val => {
+                        setTransferToAddresses({ ...transferToAddresses, [id]: val });
+                      }}
+                      onMint={method => {
+                        if (minting[id]) return;
+                        setMinting({ ...minting, [id]: true });
+                        tx(
+                          writeContracts?.AnimalParty?.[method]?.(id),
+                          (update: {
+                            status: string | number;
+                            hash: string;
+                            gasUsed: string;
+                            gasLimit: any;
+                            gas: any;
+                            gasPrice: string;
+                          }) => {
+                            console.log("📡 Transaction Update:", update);
+                            if (update && (update.status === "confirmed" || update.status === 1)) {
+                              console.log(" 🍾 Transaction " + update.hash + " finished!");
+                              console.log(
+                                " ⛽️ " +
+                                  update.gasUsed +
+                                  "/" +
+                                  (update.gasLimit || update.gas) +
+                                  " @ " +
+                                  parseFloat(update.gasPrice) / 1000000000 +
+                                  " gwei",
+                              );
+                            }
+                          },
+                        ).finally(() => {
+                          setMinting({ ...minting, [id]: false });
+                        });
+                      }}
+                      onTransfer={toAddress => {
+                        if (!toAddress) {
+                          notification.error({
+                            message: "Error",
+                            description: "Please input a valid address",
+                          });
+                          return;
+                        }
+                        console.log("writeContracts", writeContracts);
+                        tx(writeContracts.AnimalParty.transferFrom(currentAddress, toAddress, id));
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              <div className="flex justify-end">
+                <Pagination
+                  simple
+                  current={page}
+                  pageSize={pageSize}
+                  total={allAnimalPartys.length}
+                  onChange={p => setPage(p)}
+                  className="wallet-pagination"
+                />
+              </div>
+            </>
+          )}
         </div>
       </Content>
       <Footer />

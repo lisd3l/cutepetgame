@@ -12,4 +12,5 @@ export { default as useContracts } from "./useContracts";
 export { default as useTimeLeft } from "./useTimeLeft";
 export { default as useAnimalAmount } from "./useAnimalAmount";
 export { default as useTransferEvent } from "./useTransferEvent";
+export * from "./useEthContext";
 export * from "./useContractConfig";

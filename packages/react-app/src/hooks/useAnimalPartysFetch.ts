@@ -7,14 +7,18 @@ export default function useAnimalPartysFetch(
   address: string,
   balance: number,
   readContracts: Record<string, Contract>,
-) {
+): [AnimalParty[], boolean] {
   const [animalPartys, setAnimalPartys] = useState<AnimalParty[]>([]);
+  const [animalPartyLoading, setAnimalPartyLoading] = useState(false);
   let isMounted = useRef(false);
 
   useEffect(() => {
     isMounted.current = true;
     const updateAnimalPartys = async () => {
       const collectibleUpdate: any[] = [];
+      if (balance > 0) {
+        setAnimalPartyLoading(true);
+      }
       for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
         try {
           console.log("GEtting token index", tokenIndex);
@@ -59,6 +63,7 @@ export default function useAnimalPartysFetch(
       }
       if (isMounted.current) {
         setAnimalPartys(collectibleUpdate);
+        setAnimalPartyLoading(false);
       }
     };
     updateAnimalPartys();
@@ -68,5 +73,5 @@ export default function useAnimalPartysFetch(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transferEventCount, address, balance, readContracts.AnimalParty]);
 
-  return animalPartys;
+  return [animalPartys, animalPartyLoading];
 }

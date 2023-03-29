@@ -6,6 +6,7 @@ import video2 from "../assets/videos/bv02.mp4";
 import video3 from "../assets/videos/bv03.mp4";
 import { MintUrl } from "../helpers/utils";
 import { Link } from "react-router-dom";
+import { useEthContext } from "../hooks";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -63,6 +64,8 @@ export default function Home() {
     playVideo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded]);
+
+  const { animalAmount } = useEthContext();
 
   return (
     <div className="page page-home">
@@ -184,16 +187,16 @@ export default function Home() {
           <div className="p-title mb-120px">Assets held for pet</div>
           <div className="flex items-center justify-center">
             <div className="stat-col">
-              <div className="stat-thumb stat-mouse"></div>
-              <div className="mt-10 font-semibold leading-tight text-4xs">↑ 12,456</div>
-            </div>
-            <div className="stat-col ml-44">
-              <div className="stat-thumb stat-dog"></div>
-              <div className="mt-10 font-semibold leading-tight text-4xs">↓ 2,456</div>
-            </div>
-            <div className="stat-col ml-44">
               <div className="stat-thumb stat-cat"></div>
-              <div className="mt-10 font-semibold leading-tight text-4xs">- 22,456</div>
+              <div className="mt-10 font-semibold leading-tight text-4xs">{animalAmount[0]}</div>
+            </div>
+            <div className="stat-col">
+              <div className="stat-thumb stat-dog"></div>
+              <div className="mt-10 font-semibold leading-tight text-4xs">{animalAmount[1]}</div>
+            </div>
+            <div className="stat-col">
+              <div className="stat-thumb stat-mouse"></div>
+              <div className="mt-10 font-semibold leading-tight text-4xs">{animalAmount[2]}</div>
             </div>
           </div>
         </div>

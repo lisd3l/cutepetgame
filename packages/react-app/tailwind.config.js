@@ -25,6 +25,7 @@ module.exports = {
         rb2: ["Rainbow2000"],
         "rb2-b": ["Rainbow2000Bold"],
         "rb2-i": ["Rainbow2000Italic"],
+        pzl: ["Pinzelan"],
       },
       colors: {
         ptext: "var(--primary-text-color)",
