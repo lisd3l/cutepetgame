@@ -179,7 +179,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="relative pt-16 overflow-hidden text-xs pl-36 bg-theme2 pb-120px">
+        <div className="relative pt-16 overflow-hidden text-xs px-36 bg-theme2 pb-120px">
           <div className="p-title mb-68px">Recently Pet</div>
           <PetCarousel></PetCarousel>
         </div>
