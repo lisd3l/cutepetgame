@@ -67,6 +67,10 @@ export default function Home() {
 
   const { animalAmount } = useEthContext();
 
+  const statLvClassName = useCallback((v: number) => {
+    return `stat-lv${Math.floor(v / 2000) + 1}`;
+  }, []);
+
   return (
     <div className="page page-home">
       <Content>
@@ -187,15 +191,15 @@ export default function Home() {
           <div className="p-title mb-120px">Assets held for pet</div>
           <div className="flex items-center justify-center">
             <div className="stat-col">
-              <div className="stat-thumb stat-cat"></div>
+              <div className={`stat-thumb stat-cat ${statLvClassName(animalAmount[0])}`}></div>
               <div className="mt-10 font-semibold leading-tight text-4xs">{animalAmount[0]}</div>
             </div>
             <div className="stat-col">
-              <div className="stat-thumb stat-dog"></div>
+              <div className={`stat-thumb stat-dog ${statLvClassName(animalAmount[1])}`}></div>
               <div className="mt-10 font-semibold leading-tight text-4xs">{animalAmount[1]}</div>
             </div>
             <div className="stat-col">
-              <div className="stat-thumb stat-mouse"></div>
+              <div className={`stat-thumb stat-mouse ${statLvClassName(animalAmount[2])}`}></div>
               <div className="mt-10 font-semibold leading-tight text-4xs">{animalAmount[2]}</div>
             </div>
           </div>

@@ -93,21 +93,104 @@
 .stat-col {
   @apply text-center;
 
+  --bsize: 360px;
+
   .stat-thumb {
-    width: 300px;
-    height: 300px;
-    @apply bg-cover bg-no-repeat bg-center;
+    width: var(--bsize);
+    height: var(--bsize);
+    background-image: url('../assets/imgs/petbag-sprite.png');
+    @apply bg-cover bg-no-repeat relative;
+
+    &:before {
+      content: "";
+      @apply absolute inset-x-0 bottom-0 bg-no-repeat;
+      height: 70%;
+      background-size: 100% auto;
+      background-position: top center;
+    }
   }
 
   .stat-mouse {
-    background-image: url('../assets/imgs/stat-mouse.png');
+
+    &:before {
+      background-image: url('../assets/imgs/stat-mouse.png');
+      transform: scale(0.7) translate(-40px, -60px) rotate(-30deg);
+    }
+
+    &.stat-lv1 {
+      background-position: calc(var(--bsize) * -9) 0;
+    }
+
+    &.stat-lv2 {
+      background-position: calc(var(--bsize) * -8) 0;
+    }
+
+    &.stat-lv3 {
+      background-position: calc(var(--bsize) * -7) 0;
+    }
+
+    &.stat-lv4 {
+      background-position: calc(var(--bsize) * -6) 0;
+    }
+
+    &.stat-lv5 {
+      background-position: calc(var(--bsize) * -5) 0;
+    }
   }
 
   .stat-cat {
-    background-image: url('../assets/imgs/stat-cat.png');
+
+    &:before {
+      background-image: url('../assets/imgs/stat-cat.png');
+      transform: scale(0.7) translate(40px, 0);
+    }
+
+    &.stat-lv1 {
+      background-position: calc(var(--bsize) * -4) 0;
+    }
+
+    &.stat-lv2 {
+      background-position: calc(var(--bsize) * -3) 0;
+    }
+
+    &.stat-lv3 {
+      background-position: calc(var(--bsize) * -2) 0;
+    }
+
+    &.stat-lv4 {
+      background-position: calc(var(--bsize) * -1) 0;
+    }
+
+    &.stat-lv5 {
+      background-position: 0 0;
+    }
   }
 
   .stat-dog {
-    background-image: url('../assets/imgs/stat-dog.png');
+
+    &:before {
+      background-image: url('../assets/imgs/stat-dog.png');
+      transform: scale(0.7) translate(0, -30px) rotate(-10deg);
+    }
+
+    &.stat-lv1 {
+      background-position: calc(var(--bsize) * -14) 0;
+    }
+
+    &.stat-lv2 {
+      background-position: calc(var(--bsize) * -13) 0;
+    }
+
+    &.stat-lv3 {
+      background-position: calc(var(--bsize) * -12) 0;
+    }
+
+    &.stat-lv4 {
+      background-position: calc(var(--bsize) * -11) 0;
+    }
+
+    &.stat-lv5 {
+      background-position: calc(var(--bsize) * -10) 0;
+    }
   }
 }
