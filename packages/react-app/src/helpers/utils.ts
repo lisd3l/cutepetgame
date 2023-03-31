@@ -18,4 +18,4 @@ export const AnimalConstants = [
   },
 ];
 
-export const MintUrl = "https://mundane-channel.surge.sh/";
+export const MintUrl = "https://www.conpet.xyz/mint/";
