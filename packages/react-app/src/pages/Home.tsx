@@ -47,14 +47,12 @@ export default function Home() {
       }
       if (newVideoRef.current) {
         newVideoRef.current.addEventListener("ended", playVideo, { once: true });
-        setTimeout(() => {
-          const pp = newVideoRef.current?.play();
-          if (pp !== undefined) {
-            pp.then(_ => {}).catch(_ => {
-              console.log("playback prevented");
-            });
-          }
-        }, 1000);
+        const pp = newVideoRef.current?.play();
+        if (pp !== undefined) {
+          pp.then(_ => {}).catch(_ => {
+            console.log("playback prevented");
+          });
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
