@@ -70,22 +70,27 @@
 
 .pet-skeleton.ant-skeleton {
 
+  .ant-skeleton-header {
+    @apply sm:table-row sm:text-center sm:pr-0;
+  }
+
   .ant-skeleton-avatar {
     @apply w-40 h-40 rounded-xl;
   }
 
   &.ant-skeleton-with-avatar .ant-skeleton-content .ant-skeleton-title {
-    @apply mt-0;
+    @apply mt-0 sm:mt-6;
 
     & + .ant-skeleton-paragraph {
-      @apply mt-9;
+      @apply mt-9 sm:mt-4;
     }
   }
 
   .ant-skeleton-content {
+    @apply sm:table-row sm:text-center;
 
     .ant-skeleton-title {
-      @apply h-7;
+      @apply h-7 sm:w-3/4 sm:mx-auto;
     }
 
     .ant-skeleton-paragraph > li {

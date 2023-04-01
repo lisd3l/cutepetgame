@@ -15,10 +15,13 @@ module.exports = {
       "6md": ["96px", "97px"],
     },
     screens: {
-      xl: { max: "1800px" },
-      lg: { max: "1280px" },
-      md: { max: "1024px" },
-      sm: { max: "768px" },
+      "3xl": { max: "1800px" },
+      "2xl": { max: "1536px" },
+      xl: { max: "1280px" },
+      lg: { max: "1024px" },
+      md: { max: "768px" },
+      sm: { max: "640px" },
+      xs: { max: "475px" },
     },
     extend: {
       fontFamily: {

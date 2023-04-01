@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState, useEffect } from "react";
 import { Pagination, Skeleton, notification } from "antd";
 import { useContractReader, useGasPrice } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
@@ -59,10 +59,32 @@ const MyWallet = () => {
   const [minting, setMinting] = useState<Record<number, boolean>>({});
 
   const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const [pageSize, setPageSize] = useState(6);
+  const [breakpoint, setBreakpoint] = useState("");
   const animalPartys = useMemo(() => {
     return allAnimalPartys.slice(pageSize * (page - 1), pageSize * page);
-  }, [page, allAnimalPartys]);
+  }, [allAnimalPartys, pageSize, page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [pageSize]);
+
+  useLayoutEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth < 640) {
+        setPageSize(1);
+        setBreakpoint("sm");
+      } else {
+        setPageSize(6);
+        setBreakpoint("");
+      }
+    };
+    window.addEventListener("resize", onResize);
+    onResize();
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
 
   return (
     <div className="page page-wallet">
@@ -84,25 +106,25 @@ const MyWallet = () => {
             blockExplorer={blockExplorer}
           ></Account>
         </Header>
-        <div className="header-offset px-36">
-          <div className="text-center mt-120px">
-            <div className="p-title theme2">My Wallet</div>
+        <div className="header-offset px-36 2xl:px-24 lg:px-10 sm:px-6">
+          <div className="text-center mt-120px lg:mb-12">
+            <div className="p-title text-4md theme2 md:text-4xs">My Wallet</div>
           </div>
           <div className="py-12 mt-20 text-center pet-card">
-            <div className="leading-none text-3xs">{timeLeft} left until today</div>
-            <div className="mt-12 mb-4 leading-tight text-4xs">Amount</div>
+            <div className="leading-none text-3xs md:text-2xs">{timeLeft} left until today</div>
+            <div className="mt-12 mb-4 leading-tight md:mt-8 text-4xs md:text-2md">Amount</div>
             <div className="inline-flex items-center mt-4 font-bold">
               <div className="inline-flex items-center" title="Cat">
                 <div className="mr-2 icon-pet icon-pet-cat"></div>
-                <div className="leading-tight text-white text-2md">{animalAmount[0].toLocaleString()}</div>
+                <div className="leading-tight text-white text-2md sm:text-2xs">{animalAmount[0].toLocaleString()}</div>
               </div>
-              <div className="inline-flex items-center ml-20" title="Dog">
+              <div className="inline-flex items-center ml-20 md:ml-12 sm:ml-6" title="Dog">
                 <div className="mr-2 icon-pet icon-pet-dog"></div>
-                <div className="leading-tight text-2md text-pgreen">{animalAmount[1].toLocaleString()}</div>
+                <div className="leading-tight text-2md sm:text-2xs text-pgreen">{animalAmount[1].toLocaleString()}</div>
               </div>
-              <div className="inline-flex items-center ml-20" title="Mouse">
+              <div className="inline-flex items-center ml-20 md:ml-12 sm:ml-6" title="Mouse">
                 <div className="mr-2 icon-pet icon-pet-mouse"></div>
-                <div className="leading-tight text-2md text-pred">{animalAmount[2].toLocaleString()}</div>
+                <div className="leading-tight text-2md sm:text-2xs text-pred">{animalAmount[2].toLocaleString()}</div>
               </div>
             </div>
           </div>
@@ -117,20 +139,21 @@ const MyWallet = () => {
             </div>
           )}
           {animalPartys.length === 0 && animalPartyLoading && (
-            <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
-              {new Array(6).fill(0).map((_, i) => (
+            <div className="grid grid-cols-2 gap-12 mt-20 mb-10 2xl:grid-cols-1">
+              {new Array(pageSize).fill(0).map((_, i) => (
                 <Skeleton key={i} active avatar className="pet-skeleton" />
               ))}
             </div>
           )}
           {animalPartys.length > 0 && (
             <>
-              <div className="grid grid-cols-2 gap-12 mt-20 mb-10">
+              <div className="grid grid-cols-2 gap-12 mt-20 mb-10 2xl:grid-cols-1">
                 {animalPartys.map(animalParty => {
                   const id = animalParty.id.toNumber();
                   return (
                     <TransferCard
                       key={`${id}_${animalParty.uri}_${animalParty.owner}`}
+                      breakpoint={breakpoint}
                       owner={animalParty}
                       provider={mainnetProvider}
                       blockExplorer={blockExplorer}
@@ -185,7 +208,7 @@ const MyWallet = () => {
                   );
                 })}
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end sm:justify-center">
                 <Pagination
                   simple
                   current={page}

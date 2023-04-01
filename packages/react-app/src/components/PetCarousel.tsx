@@ -14,7 +14,7 @@ const PetCarousel: React.FC = () => {
     });
   }, []);
   return (
-    <div className="grid grid-cols-5 gap-5 pet-carousel">
+    <div className="grid grid-cols-5 gap-5 2xl:grid-cols-4 pet-carousel md:grid-cols-2 md:grid-rows-2 xs:grid-cols-1 xs:grid-rows-4">
       {pets.map(pet => (
         <div className="pet-slide" key={pet.key}>
           <div className="pet-container">

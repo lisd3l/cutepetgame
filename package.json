@@ -66,9 +66,5 @@
       "**/hardhat-ts",
       "**/hardhat-ts/**"
     ]
-  },
-  "dependencies": {
-    "@types/react": "17.0.39",
-    "antd": "4.23.0"
   }
 }
