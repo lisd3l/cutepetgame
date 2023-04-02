@@ -31,6 +31,7 @@ const MyWallet = () => {
     writeContracts,
     transferEventCount,
     animalAmount,
+    winnerMessage,
   } = useEthContext();
 
   const currentAddress = useCurrentAddress(userSigner);
@@ -64,6 +65,16 @@ const MyWallet = () => {
   const animalPartys = useMemo(() => {
     return allAnimalPartys.slice(pageSize * (page - 1), pageSize * page);
   }, [allAnimalPartys, pageSize, page]);
+
+  useEffect(() => {
+    if (winnerMessage.message) {
+      notification.info({
+        message: winnerMessage.time,
+        description: winnerMessage.message,
+        placement: 'topRight',
+      });
+    }
+  }, [winnerMessage]);
 
   useEffect(() => {
     setPage(1);
@@ -162,11 +173,11 @@ const MyWallet = () => {
                       onChange={val => {
                         setTransferToAddresses({ ...transferToAddresses, [id]: val });
                       }}
-                      onMint={method => {
+                      onConvert={(method, value) => {
                         if (minting[id]) return;
                         setMinting({ ...minting, [id]: true });
                         tx(
-                          writeContracts?.AnimalParty?.[method]?.(id),
+                          writeContracts?.AnimalParty?.[method]?.(id, value),
                           (update: {
                             status: string | number;
                             hash: string;

@@ -16,10 +16,10 @@ interface TransforCardProps {
   breakpoint: string;
   onChange: (value: string) => void;
   onTransfer: (toAddress: string) => void;
-  onMint: (method: string) => void;
+  onConvert: (method: string, value: number) => void;
 }
 const TransferCard: React.FC<TransforCardProps> = props => {
-  const { owner, minting, provider, blockExplorer, address, breakpoint, onChange, onTransfer, onMint } = props;
+  const { owner, minting, provider, blockExplorer, address, breakpoint, onChange, onTransfer, onConvert } = props;
   return (
     <div className="flex items-start p-6 sm:flex-col sm:items-center 2xl:p-4 pet-card">
       <img
@@ -63,7 +63,7 @@ const TransferCard: React.FC<TransforCardProps> = props => {
               type="primary"
               size="large"
               className="mr-2 sm:w-full sm:mr-0 sm:mt-6"
-              onClick={() => onMint(ac.method)}
+              onClick={() => onConvert(ac.method, ac.key)}
               loading={minting}
             >
               Convert {ac.name}

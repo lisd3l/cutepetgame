@@ -8,6 +8,7 @@ import "./style/less/index.less";
 import {
   EthContext,
   useAnimalAmount,
+  useWinnerAnimalEvent,
   useContracts,
   useLocalProvider,
   useMainnetProvider,
@@ -33,6 +34,7 @@ export default function App() {
 
   const transferEventCount = useTransferEvent(readContracts);
   const animalAmount = useAnimalAmount(transferEventCount, readContracts);
+  const winnerMessage = useWinnerAnimalEvent(readContracts);
   return (
     <BrowserRouter forceRefresh={false}>
       <IconSprite />
@@ -49,6 +51,7 @@ export default function App() {
           mainnetContracts,
           transferEventCount,
           animalAmount,
+          winnerMessage,
         }}
       >
         <Routes />
