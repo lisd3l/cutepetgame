@@ -12,6 +12,7 @@ type EthContextType = ReturnType<typeof useWeb3Modal> &
      * array of animal amount has three elements: [cat, dog, mouse]
      */
     animalAmount: number[];
+    winnerMessage: {"time": string, "message": string};
   };
 
 export const EthContext = React.createContext<EthContextType>({} as EthContextType);

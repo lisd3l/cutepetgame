@@ -4,17 +4,36 @@ export const AnimalConstants = [
   {
     key: Category.Mouse,
     name: "Mouse",
-    method: "changeMouse",
+    method: "StatementChange",
   },
   {
     key: Category.Cat,
     name: "Cat",
-    method: "changeCat",
+    method: "StatementChange",
   },
   {
     key: Category.Dog,
     name: "Dog",
-    method: "changeDog",
+    method: "StatementChange",
+  },
+];
+
+export const WinnerAnimalConstants = [
+  {
+    key: Category.Mouse,
+    winnerMessage: "Winner is Mouse",
+  },
+  {
+    key: Category.Cat,
+    winnerMessage: "Winner is Cat",
+  },
+  {
+    key: Category.Dog,
+    winnerMessage: "Winner is Dog",
+  },
+  {
+    key: 4,
+    winnerMessage: "The game ended in a tie",
   },
 ];
 

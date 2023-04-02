@@ -7,7 +7,7 @@ export default function useTimeLeft(readContracts: Record<string, Contract>) {
   useEffect(() => {
     const getTimeLefting = async () => {
       try {
-        const res: BigNumber = await readContracts.MyContract?.getTimeLefting();
+        const res: BigNumber = await readContracts.PoolContract?.timeLefting();
         if (res) {
           setTimeLeft(res.toNumber());
         }
@@ -16,6 +16,6 @@ export default function useTimeLeft(readContracts: Record<string, Contract>) {
       }
     };
     getTimeLefting();
-  }, [readContracts.MyContract]);
+  }, [readContracts.PoolContract]);
   return timeLeft;
 }

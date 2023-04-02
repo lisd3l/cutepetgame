@@ -11,6 +11,12 @@ export default function useTransferEvent(readContracts: Record<string, Contract>
         setTransferEventCount(transferEventCount + 1);
       }
     });
+    const convertFilter = readContracts.AnimalParty?.filters.FormChange(null, null, null);
+    readContracts.AnimalParty?.on(convertFilter, (from: BigNumber, to: BigNumber, user: string) => {
+      if (user && from.gt(0) && to.gt(0)) {
+        setTransferEventCount(transferEventCount + 1);
+      }
+    });
     return () => {
       readContracts.AnimalParty?.removeAllListeners();
     };

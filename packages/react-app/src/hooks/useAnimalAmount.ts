@@ -15,7 +15,7 @@ export default function useAnimalAmount(transferEventCount: number, readContract
     isMounted.current = true;
     const checkAnimalAmount = async () => {
       try {
-        const res: Record<string, BigNumber> = await readContracts.AnimalParty?.checkAmountOfAP();
+        const res: Record<string, BigNumber> = await readContracts.ERC1967Proxy?.checkAllConpet();
         if (res && isMounted.current) {
           setAnimalAmount([res.cat.toNumber(), res.dog.toNumber(), res.mouse.toNumber()]);
         }
@@ -27,6 +27,6 @@ export default function useAnimalAmount(transferEventCount: number, readContract
     return () => {
       isMounted.current = false;
     };
-  }, [transferEventCount, readContracts.AnimalParty]);
+  }, [transferEventCount, readContracts.ERC1967Proxy]);
   return animalAmount;
 }

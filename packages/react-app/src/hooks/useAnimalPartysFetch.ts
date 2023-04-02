@@ -26,7 +26,7 @@ export default function useAnimalPartysFetch(
           console.log("tokenId", tokenId);
           const tokenURI = await readContracts.AnimalParty.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
-          const tokenStatic: BigNumber = await readContracts.AnimalParty.tokenStatic(tokenId);
+          const tokenStatic: BigNumber = await readContracts.ERC1967Proxy.tokenStatic(tokenId);
           console.log("tokenStatic", tokenStatic);
 
           const reg = /^\s+|\s+$/g;
@@ -71,7 +71,7 @@ export default function useAnimalPartysFetch(
       isMounted.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transferEventCount, address, balance, readContracts.AnimalParty]);
+  }, [transferEventCount, address, balance, readContracts.AnimalParty, readContracts.ERC1967Proxy]);
 
   return [animalPartys, animalPartyLoading];
 }
