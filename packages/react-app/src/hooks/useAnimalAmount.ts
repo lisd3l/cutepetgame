@@ -15,9 +15,9 @@ export default function useAnimalAmount(transferEventCount: number, readContract
     isMounted.current = true;
     const checkAnimalAmount = async () => {
       try {
-        const res: Record<string, BigNumber> = await readContracts.ERC1967Proxy?.checkAllConpet();
-        if (res && isMounted.current) {
-          setAnimalAmount([res.cat.toNumber(), res.dog.toNumber(), res.mouse.toNumber()]);
+        const res: BigNumber[] = await readContracts.ERC1967Proxy?.checkAllConpet();
+        if (res && res.length === 3 && isMounted.current) {
+          setAnimalAmount([res[0].toNumber(), res[1].toNumber(), res[2].toNumber()]);
         }
       } catch (e) {
         console.log(e);

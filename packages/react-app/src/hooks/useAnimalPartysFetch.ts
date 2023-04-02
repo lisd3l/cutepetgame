@@ -24,7 +24,7 @@ export default function useAnimalPartysFetch(
           console.log("GEtting token index", tokenIndex);
           const tokenId = await readContracts.AnimalParty.tokenOfOwnerByIndex(address, tokenIndex);
           console.log("tokenId", tokenId);
-          const tokenURI = await readContracts.AnimalParty.tokenURI(tokenId);
+          const tokenURI = await readContracts.ERC1967Proxy.tokenURI(tokenId);
           console.log("tokenURI", tokenURI);
           const tokenStatic: BigNumber = await readContracts.ERC1967Proxy.tokenStatic(tokenId);
           console.log("tokenStatic", tokenStatic);
