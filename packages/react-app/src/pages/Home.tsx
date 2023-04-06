@@ -73,10 +73,10 @@ export default function Home() {
     <div className="page page-home">
       <Content>
         <Header>
-          <a href="#rules">�V�ѕ�</a>
-          //<a href="#bouns">Bouns</a>
-          <a href="#fairness">������</a>
-          <a href="#community">�R�~���j�e�B�K�o�i���X</a>
+          <a href="#rules">遊び方</a>
+          {/* <a href="#bouns">Bouns</a> */}
+          <a href="#fairness">公平性</a>
+          <a href="#community">コミュニティガバナンス</a>
           <a href="#roadmap">RoadMap</a>
           <Link to="/wallet">My Wallet</Link>
           <a href={MintUrl} target="_blank" rel="noreferrer">
@@ -110,13 +110,13 @@ export default function Home() {
           ></video>
         </div>
         <div className="relative pt-32 pb-40 overflow-hidden text-xs text-center px-36 2xl:px-24 lg:px-10 lg:pt-12 lg:pb-16 home-section-intro bg-theme2">
-          <div className="p-title text-4md 2xl:text-3xs lg:text-2md md:text-2xs mb-68px lg:mb-8">CONPET�ɂ���</div>
+          <div className="p-title text-4md 2xl:text-3xs lg:text-2md md:text-2xs mb-68px lg:mb-8">CONPETについて</div>
           <div className="mx-auto leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md content md:text-left">
-            �ǂ����Ă����炷�邱�Ƃ��ł����A����c���Ă��܂��Ă���y�b�g���x������v���W�F�N�g�̈�Ƃ���
-            �uCONPET/�R���y�b�g�v�͒a�����܂����B
-            ����L�Ȃǂ̃y�b�g�Ɋւ���Q�[�����J�����A�y�b�g���ɂ��Ă̔F�������߁A
-            �F���񂩂�̎x�������肢���邽�߂̊������s���Ă��܂��B
-            CONPET��ʂ��āA�����ł����ӎ������シ�邱�Ƃ��F���Ă��܂��B
+            どうしても飼育することができず、売れ残ってしまっているペットを支援するプロジェクトの一つとして
+            「CONPET/コンペット」は誕生しました。
+            犬や猫などのペットに関するゲームを開発し、ペット問題についての認識を高め、
+            皆さんからの支援をお願いするための活動を行っています。
+            CONPETを通じて、少しでも問題意識が向上することを祈っています。
           </div>
         </div>
         <div className="relative pt-16 overflow-hidden text-xs lg:pt-10 pb-15 lg:pb-9 px-36 2xl:px-24 lg:px-10 bg-theme2">
@@ -126,14 +126,13 @@ export default function Home() {
               id="rules"
               data-anchor="rules"
             >
-              �V�ѕ�
+              遊び方
             </div>
             <ul className="leading-tight tracking-wide list-disc text-3xs 2xl:text-2xs lg:text-md">
-              <li>�V�ѕ��͊ȒP�ŁA���A�L�A�n���X�^�[��3�C����A�ǂꂩ1�C�𓊕[���đ҂����B</li>
-              <li>�������Ԃ��I����āA��ԓ��[�������Ȃ����������ƃ��[�U�[�̏����ł��I</li>
-              <li>���̃Q�[���̖ʔ����Ƃ���Ƃ��āA�������ԃM���M���܂ŁA�u���[����������ύX�ł���v�ł��B</li>
-              <li>����ɂ���āA���[���I���Ō�̏u�Ԃ܂ŁA�ǂ�Ȍ��ʂɂȂ邩������Ȃ��Ȃ�̂�CONPET�̖��͂ł��I</li>
-              
+              <li>遊び方は簡単で、犬、猫、ハムスターの3匹から、どれか1匹を投票して待つだけ。</li>
+              <li>制限時間が終わって、一番投票数が少なかった動物とユーザーの勝利です！</li>
+              <li>このゲームの面白いところとして、制限時間ギリギリまで、「投票した動物を変更できる」です。</li>
+              <li>これによって、投票が終わる最後の瞬間まで、どんな結果になるか分からなくなるのがCONPETの魅力です！</li>
             </ul>
             <div className="section-plate"></div>
           </div>
@@ -143,12 +142,13 @@ export default function Home() {
               id="fairness"
               data-anchor="fairness"
             >
-              ������
+              公平性
             </div>
             <div className="leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              �V�ѕ��ł����������悤�ɁA���[���ʂ̕s�m���������߂邱�ƂŁA���̃Q�[���͌��������ێ����Ă��܂��B <br />
-              �Ō�̏I���ԍۂł����[���铮����ύX�ł��邽�߁A��������`�����X�͑S�Ẵ��[�U�[�� <br />
-              ���݂��Ă��܂��B����ɁA���؂ⓝ�v�Ȃǂ̂��ׂĂ̏����̓X�}�[�g�R���g���N�g�Ŏ�������Ă��܂��B
+              遊び方でも説明したように、投票結果の不確実性を高めることで、 <br />
+              このゲームは公平性を維持しています。 <br />
+              最後の終了間際でも投票する動物を変更できるため、勝利するチャンスは全てのユーザーに <br />
+              存在しています。さらに、検証や統計などのすべての処理はスマートコントラクトで実装されています。
             </div>
           </div>
           <div className="mb-120px lg:mb-12 md:mb-9">
@@ -157,17 +157,21 @@ export default function Home() {
               id="community"
               data-anchor="community"
             >
-              �R�~���j�e�B�K�o�i���X
+              コミュニティガバナンス
             </div>
             <div className="leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              �������͍���A���{�y�b�g�ی싦��A�y�b�g�V���b�v�Ƌ��͂���\��ł��B<br />
-              �y�b�g�ی싦��DAO���������A���v�̎g�p�ƕ��z�ɂ��Č��肵�܂��B<br />
-              �܂��A���L��NPO�@�l�l�ɗ��v�̈ꕔ����t�v���܂��B
-              <li><a href="http://npo.seikenjoto.org/page/index-4.html" className="block mt-4 sm:mt-2">
-            �����c�������@�l �ی����̐����E�L�̏��n�𐄐i�����Author Profile</a>
+              私たちは今後、日本ペット保護協会、ペットショップと協力する予定です。 <br />
+              ペット保護協会DAOを結成し、利益の使用と分配について決定します。 <br />
+              また、下記のNPO法人様に利益の一部を寄付致します。
+              <li>
+                <a href="http://npo.seikenjoto.org/page/index-4.html" className="mt-4 sm:mt-2">
+                  特定非営利活動法人 保健所の成犬・猫の譲渡を推進する会Author Profile
+                </a>
               </li>
-              <li><a href="http://minashigo-joutocenter.com/" className="block mt-4 sm:mt-2">
-            NPO�@�l�݂Ȃ����~���� ���L���n�Z���^�[</a>
+              <li>
+                <a href="http://minashigo-joutocenter.com/" className="mt-4 sm:mt-2">
+                  NPO法人みなしご救援隊 犬猫譲渡センター
+                </a>
               </li>
             </div>
           </div>
@@ -181,21 +185,21 @@ export default function Home() {
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2023.4 (Phase 1)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              �x�[�^�ł����[���`���܂��B�e�X�g�`�F�[����ɂč\�z���AMINT�S�Ė����ɂȂ�܂��B
-              �Q�[�����[���͏�L�ɋL�ڂ���Ă���ʂ�A�����������[�U�[�͒��I�ɂ��WL�i�z���C�g���X�g�j���l�����邱�Ƃ��ł��܂��B
+              ベータ版をローンチします。テストチェーン上にて構築し、MINT全て無料になります。
+              ゲームルールは上記に記載されている通り、勝利したユーザーは抽選によりWL（ホワイトリスト）を獲得することができます。
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2023.6 (Phase 2)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              �Q�[���̏��҂��g�[�N�������炦�܂��A�Z�J���_���[�}�[�P�b�g��GameFi���J�n����܂��B
+              ゲームの勝者がトークンをもらえます、セカンダリーマーケットのGameFiが開始されます。
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2023.8 (Phase 3)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              NFT�ɑ������ǉ�����A�����^�C�v�̓������m�Ő퓬�iPVP�j���ł���悤�ɂȂ�܂��B
-              �y�b�g�ی싦��DAO���������܂��B���v�̗p�r�͑S��NFT���������߂܂��B
+              NFTに属性が追加され、同じタイプの動物同士で戦闘（PVP）ができるようになります。
+              ペット保護協会DAOを結成します。利益の用途は全てNFT所持が決めます。
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2024.1 (Phase 4)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              �Q�[���v���b�g�t�H�[���̍\�z�B���̃Q�[���̗����グ�B�܂��܂��n�܂����΂���ł��B���ꂩ��̃��[�h�}�b�v�Ɍ�����ҁB
+              ゲームプラットフォームの構築。他のゲームの立ち上げ。まだまだ始まったばかりです。これからのロードマップに乞うご期待。
             </div>
           </div>
         </div>
