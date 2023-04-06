@@ -73,10 +73,10 @@ export default function Home() {
     <div className="page page-home">
       <Content>
         <Header>
-          <a href="#rules">遊び方</a>
-          //<a href="#bouns">Bouns</a>
-          <a href="#fairness">公平性</a>
-          <a href="#community">コミュニティガバナンス</a>
+          <a href="#rules">Rules</a>
+          <a href="#bouns">Bouns</a>
+          <a href="#fairness">Fairness</a>
+          <a href="#community">community</a>
           <a href="#roadmap">RoadMap</a>
           <Link to="/wallet">My Wallet</Link>
           <a href={MintUrl} target="_blank" rel="noreferrer">
@@ -110,13 +110,11 @@ export default function Home() {
           ></video>
         </div>
         <div className="relative pt-32 pb-40 overflow-hidden text-xs text-center px-36 2xl:px-24 lg:px-10 lg:pt-12 lg:pb-16 home-section-intro bg-theme2">
-          <div className="p-title text-4md 2xl:text-3xs lg:text-2md md:text-2xs mb-68px lg:mb-8">CONPETについて</div>
+          <div className="p-title text-4md 2xl:text-3xs lg:text-2md md:text-2xs mb-68px lg:mb-8">Pet Battle</div>
           <div className="mx-auto leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md content md:text-left">
-            どうしても飼育することができず、売れ残ってしまっているペットを支援するプロジェクトの一つとして
-            「CONPET/コンペット」は誕生しました。
-            犬や猫などのペットに関するゲームを開発し、ペット問題についての認識を高め、
-            皆さんからの支援をお願いするための活動を行っています。
-            CONPETを通じて、少しでも問題意識が向上することを祈っています。
+            We started an initiative to support pets that are left unsold and are facing problems. As part of this
+            effort, we are developing a pet-themed game to raise awareness about the issue of unsold pets and encourage
+            support from the public.
           </div>
         </div>
         <div className="relative pt-16 overflow-hidden text-xs lg:pt-10 pb-15 lg:pb-9 px-36 2xl:px-24 lg:px-10 bg-theme2">
@@ -126,16 +124,28 @@ export default function Home() {
               id="rules"
               data-anchor="rules"
             >
-              遊び方
+              Game Rules (Phase 1)
             </div>
             <ul className="leading-tight tracking-wide list-disc text-3xs 2xl:text-2xs lg:text-md">
-              <li>遊び方は簡単で、犬、猫、ハムスターの3匹から、どれか1匹を投票して待つだけ。</li>
-              <li>制限時間が終わって、一番投票数が少なかった動物とユーザーの勝利です！</li>
-              <li>このゲームの面白いところとして、制限時間ギリギリまで、「投票した動物を変更できる」です。</li>
-              <li>これによって、投票が終わる最後の瞬間まで、どんな結果になるか分からなくなるのがCONPETの魅力です！</li>
-              
+              <li>Users choose the type of animal they want.</li>
+              <li>Every day at a designated time on the blockchain, the number of each animal type is tallied.</li>
+              <li>The type with the fewest numbers wins.</li>
+              <li>Users can switch characters even at the last minute.</li>
+              <li>At the initial stage, even the loser can earn a few battle points.</li>
             </ul>
             <div className="section-plate"></div>
+          </div>
+          <div className="mb-120px lg:mb-12 md:mb-9">
+            <div
+              className="p-title text-4md 2xl:text-3xs lg:text-2md md:text-2xs mb-68px lg:mb-8"
+              id="bouns"
+              data-anchor="bouns"
+            >
+              Bonus
+            </div>
+            <div className="leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
+              Users who invite others can receive NFT bonuses.
+            </div>
           </div>
           <div className="mb-120px lg:mb-12 md:mb-9">
             <div
@@ -143,12 +153,12 @@ export default function Home() {
               id="fairness"
               data-anchor="fairness"
             >
-              公平性
+              Fairness
             </div>
             <div className="leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              遊び方でも説明したように、投票結果の不確実性を高めることで、このゲームは公平性を維持しています。 <br />
-              最後の終了間際でも投票する動物を変更できるため、勝利するチャンスは全てのユーザーに <br />
-              存在しています。さらに、検証や統計などのすべての処理はスマートコントラクトで実装されています。
+              To maintain fairness, this game can increase uncertainty in the results. <br />
+              Anyone can win because they can switch characters even at the last minute. <br />
+              In addition, all processing, such as verification and statistics, is implemented in smart contracts.
             </div>
           </div>
           <div className="mb-120px lg:mb-12 md:mb-9">
@@ -157,18 +167,11 @@ export default function Home() {
               id="community"
               data-anchor="community"
             >
-              コミュニティガバナンス
+              Community Governance
             </div>
             <div className="leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              私たちは今後、日本ペット保護協会、ペットショップと協力する予定です。<br />
-              ペット保護協会DAOを結成し、利益の使用と分配について決定します。<br />
-              また、下記のNPO法人様に利益の一部を寄付致します。
-              <li><a href="http://npo.seikenjoto.org/page/index-4.html" className="block mt-4 sm:mt-2">
-            特定非営利活動法人 保健所の成犬・猫の譲渡を推進する会Author Profile</a>
-              </li>
-              <li><a href="http://minashigo-joutocenter.com/" className="block mt-4 sm:mt-2">
-            NPO法人みなしご救援隊 犬猫譲渡センター</a>
-              </li>
+              We plan to collaborate with the Japan Pet Protection Association. We will form a Pet Protection <br />
+              Association DAO to decide on the use and distribution of profits. To maintain fairness, this game can
             </div>
           </div>
           <div className="mb-120px lg:mb-12 md:mb-9">
@@ -181,21 +184,21 @@ export default function Home() {
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2023.4 (Phase 1)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              ベータ版をローンチします。テストチェーン上にて構築し、MINT全て無料になります。
-              ゲームルールは上記に記載されている通り、勝利したユーザーは抽選によりWL（ホワイトリスト）を獲得することができます。
+              Winners will receive battle points at the beta version launch, and even the loser will receive a small
+              number of battle points. Users who invite members will also receive NFT bonuses (BNB).
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2023.6 (Phase 2)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              ゲームの勝者がトークンをもらえます、セカンダリーマーケットのGameFiが開始されます。
+              Battle points can be converted to battle tokens, and the secondary market GameFi will start.
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2023.8 (Phase 3)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              NFTに属性が追加され、同じタイプの動物同士で戦闘（PVP）ができるようになります。
-              ペット保護協会DAOを結成します。利益の用途は全てNFT所持が決めます。
+              Attributes will be added to NFTs, and same-type animals will be able to battle (PVP).
             </div>
             <div className="font-bold text-2lg 2xl:text-2xs lg:text-lg mb-7">2024.1 (Phase 4)</div>
             <div className="mb-12 leading-tight tracking-wide text-3xs 2xl:text-2xs lg:text-md">
-              ゲームプラットフォームの構築。他のゲームの立ち上げ。まだまだ始まったばかりです。これからのロードマップに乞うご期待。
+              The platform will be built, and NFTs will be reprocessed, and other games will be launched on the
+              platform.
             </div>
           </div>
         </div>
